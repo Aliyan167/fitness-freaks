@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load core_tags %}
+
+{% block subtitle %}
+    Membership List
+{% endblock %}
+
+
+{% block content %}
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h1 class="display-4 text-primary font-weight-bold">Memberhship Details</h1>
+            <p class="lead text-muted">Manage and view the details of all Membership subscriptions.</p>
+        </div>
+    </div>
+
+
+    <div class="row mb-4">
+        <div class="col-md-6 col-lg-10">
+            <form method="get">
+                <div class="form-group">
+                    <input type="text" name="search" class="form-control form-control-md"
+                           placeholder="Search by username..." value="{{ search_query }}">
+                </div>
+        </div>
+        <div class="col-md-2 ml-auto">
+            <button class="btn btn-primary btn-md btn-block" type="submit">
+                <i class="fa fa-search"></i> Search
+            </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-borderless">
+                            {% if memberships %}
+                                <thead class="border-bottom">
+                                <tr>
+                                    <th>User</th>
+                                    <th>Membership Type</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Status</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for membership in memberships %}
+                                    <tr>
+                                        <td>{{ membership.user.username }}</td>
+                                        <td>{{ membership.get_membership_type_display }}</td>
+                                        <td>{{ membership.start_date }}</td>
+                                        <td>{{ membership.end_date }}</td>
+                                        <td>
+                                            {% if membership.is_active %}
+                                                <b class="text-success"><i class="fa fa-check-circle"></i> Active</b>
+                                            {% else %}
+                                                <b class="text-danger"><i class="fa fa-times-circle"></i> Expired</b>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            {% else %}
+                                <th class="text-danger text-center">No memberships found.</th>
+                            {% endif %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="mt-4">
+                <ul class="pagination">
+                    {% if memberships.has_previous %}
+                        <li>
+                            <a href="{% relative_url memberships.previous_page_number 'page' request.GET.urlencode %}">
+                                Previous
+                            </a>
+                        </li>
+                    {% endif %}
+                    <li>
+                        <span>Page {{ memberships.number }} of {{ memberships.paginator.num_pages }}.</span>
+                    </li>
+                    {% if memberships.has_next %}
+                        <li>
+                            <a href="{% relative_url memberships.next_page_number 'page' request.GET.urlencode %}">
+                                Next
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(document).ready(function () {
+            $('label').hide();
+            $('input').addClass('form-control');
+            $('select').addClass('form-control');
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h1 class="display-4 text-primary font-weight-bold">Trainer Details</h1>
+            <p class="lead text-muted">Manage and view the details of all Trainer subscriptions.</p>
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-md-6 col-lg-10">
+            <form method="get">
+                <div class="form-group">
+                    <input type="text" name="search" class="form-control form-control-md"
+                           placeholder="Search by username..." value="{{ search_query }}">
+                </div>
+        </div>
+        <div class="col-md-2 ml-auto">
+            <button class="btn btn-primary btn-md btn-block" type="submit">
+                <i class="fa fa-search"></i> Search
+            </button>
+            </form>
+        </div>
+    </div>
+    <!-- Trainer Table Section -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-lg border-light rounded">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover table-bordered">
+                            <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Specialization</th>
+                                <th>Experience</th>
+                                <th>Phone Number</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for trainer in trainers %}
+                                <tr>
+                                    <td>{{ trainer.user.username }}</td>
+                                    <td>{{ trainer.specialization }}</td>
+                                    <td>{{ trainer.experience }}</td>
+                                    <td>{{ trainer.phone_number }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center text-danger">No trainers found.</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        // Initialize tooltips for badges
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        });
+    </script>
+{% endblock %}

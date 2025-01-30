@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load core_tags %}
+
+{% block content %}
+<div class="row mb-5">
+    <div class="col-12 text-center">
+        <h1 class="display-4 text-primary font-weight-bold">Fee Records</h1>
+        <p class="lead text-muted">Manage and view the details of all Fee subscriptions.</p>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-6 col-lg-10">
+        <form method="get">
+            <div class="form-group">
+                <input type="text" name="search" class="form-control form-control-md"
+                       placeholder="Search by username..." value="{{ search_query }}">
+            </div>
+    </div>
+    <div class="col-md-2 ml-auto">
+        <button class="btn btn-primary btn-md btn-block" type="submit">
+            <i class="fa fa-search"></i> Search
+        </button>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-borderless">
+                        {% if fee_list %}
+                            <thead class="border-bottom">
+                            <tr>
+                                <th>ID</th>
+                                <th>User</th>
+                                <th>Amount</th>
+                                <th>Due Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for fee in fee_list %}
+                                <tr>
+                                    <td>{{ fee.order }}</td>
+                                    <td>{{ fee.user.username }}</td>
+                                    <td>${{ fee.total_amount|floatformat:2 }}</td>
+                                    <td>{{ fee.due_date }}</td>
+                                    <td>
+                                        {% if fee.is_paid %}
+                                            <b class="text-success"><i class="fa fa-check-circle"></i> Paid</b>
+                                        {% else %}
+                                            {% if fee.is_overdue %}
+                                                <b class="text-danger"><i class="fa fa-times-circle"></i> Overdue</b>
+                                            {% else %}
+                                                <b class="text-warning"><i class="fa fa-clock"></i> Pending</b>
+                                            {% endif %}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="#" class="text-decoration-none">
+                                            <i class="mdi mdi-pencil icon-sm"></i> Edit
+                                        </a>
+                                        <a href="#" class="text-decoration-none text-danger ml-2">
+                                            <i class="mdi mdi-delete icon-sm"></i> Delete
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        {% else %}
+                            <th class="text-danger">No fee records available.</th>
+                        {% endif %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="mt-4">
+            <ul class="pagination">
+                {% if fee_list.has_previous %}
+                    <li>
+                        <a href="{% relative_url fee_list.previous_page_number 'page' request.GET.urlencode %}">
+                            Previous
+                        </a>
+                    </li>
+                {% endif %}
+                <li>
+                    <span>Page {{ fee_list.number }} of {{ fee_list.paginator.num_pages }}.</span>
+                </li>
+                {% if fee_list.has_next %}
+                    <li>
+                        <a href="{% relative_url fee_list.next_page_number 'page' request.GET.urlencode %}">
+                            Next
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+<a href="#" class="btn btn-primary">
+    <i class="fa fa-plus"></i> Add New Fee
+</a>
+{% endblock %}

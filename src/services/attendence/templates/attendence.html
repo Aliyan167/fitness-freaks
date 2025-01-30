@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load core_tags %}
+
+{% block subtitle %}
+    Attendance Records
+{% endblock %}
+
+{% block content %}
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h1 class="display-4 text-primary font-weight-bold">Attendence Details</h1>
+            <p class="lead text-muted">Manage and view the details of all Attendence subscriptions.</p>
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-md-6 col-lg-10">
+            <form method="get">
+                <div class="form-group">
+                    <input type="text" name="search" class="form-control form-control-md"
+                           placeholder="Search by username..." value="{{ search_query }}">
+                </div>
+        </div>
+        <div class="col-md-2 ml-auto">
+            <button class="btn btn-primary btn-md btn-block" type="submit">
+                <i class="fa fa-search"></i> Search
+            </button>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-borderless">
+                            {% if attendances %}
+                                <thead class="border-bottom">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>User</th>
+                                    <th>Check-in</th>
+                                    <th>Check-out</th>
+                                    <th>Status</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for attendance in attendances %}
+                                    <tr>
+                                        <td>{{ attendance.id }}</td>
+                                        <td>{{ attendance.user.username }}</td>
+                                        <td>{{ attendance.check_in|default:"Not Checked In" }}</td>
+                                        <td>{{ attendance.check_out|default:"Not Checked Out" }}</td>
+                                        <td>
+                                            {% if attendance.check_out %}
+                                                <b class="text-success"><i class="fa fa-check-circle"></i> Completed</b>
+                                            {% else %}
+                                                <b class="text-warning"><i class="fa fa-clock"></i> Ongoing</b>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            {% else %}
+                                <th class="text-danger">No attendance records available.</th>
+                            {% endif %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="mt-4">
+                <ul class="pagination">
+                    {% if attendances.has_previous %}
+                        <li>
+                    <span>
+                        <a href="{% relative_url attendances.previous_page_number 'page' request.GET.urlencode %}">
+                            Previous
+                        </a>
+                    </span>
+                        </li>
+                    {% endif %}
+                    <li class="">
+                        <span>Page {{ attendances.number }} of {{ attendances.paginator.num_pages }}.</span>
+                    </li>
+                    {% if attendances.has_next %}
+                        <li>
+                    <span>
+                        <a href="{% relative_url attendances.next_page_number 'page' request.GET.urlencode %}">
+                            Next
+                        </a>
+                    </span>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js_code %}
+    <script>
+        $(document).ready(function () {
+            $('label').hide();
+            $('input').addClass('form-control');
+            $('select').addClass('form-control');
+        });
+    </script>
+{% endblock %}
