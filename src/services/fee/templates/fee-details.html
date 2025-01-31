@@ -1,78 +1,92 @@
 {% extends 'base.html' %}
-{% load static %}
-
-{% block subtitle %}
-    Fee Details - {{ fee.user.username }}
-{% endblock %}
+{% load crispy_forms_tags %}
+{% load core_tags %}
 
 {% block content %}
-    <div class="container py-4">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <a href="{% url 'fee:fee_list' %}" class="btn btn-outline-primary"><i class="fa fa-arrow-left"></i> Back</a>
-
-        </div>
-        <div class="card shadow-sm border-0 rounded">
+<div class="row mb-5">
+    <div class="col-12 text-center">
+        <h1 class="display-4 text-primary font-weight-bold">Fee Details</h1>
+        <p class="lead text-muted">View detailed information for this fee subscription.</p>
+    </div>
+</div>
+<div class="row mt-4 justify-content-end">
+    <div class="col-md-12 text-right">
+        <a href="#" class="btn btn-warning btn-sm">
+            <i class="mdi mdi-pencil icon-sm"></i> Edit Fee
+        </a>
+        <a href="#" class="btn btn-danger btn-sm">
+            <i class="mdi mdi-delete icon-sm"></i> Delete Fee
+        </a>
+        <a href="#" class="btn btn-secondary btn-sm">
+            <i class="fa fa-arrow-left"></i> Back to Fee List
+        </a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
             <div class="card-body">
-                <div class="text-center mb-4">
-                    <h5 class="mb-0 text-dark">{{ fee.user.get_full_name }} ({{ fee.user.username }})</h5>
-                    <p class="text-muted">Fee Issued on: {{ fee.issue_date }}</p>
+                <div class="table-responsive">
+                    <table class="table table-borderless">
+                        <thead class="border-bottom">
+                            <tr>
+                                <th>User</th>
+                                <th>Order ID</th>
+                                <th>Amount</th>
+                                <th>Discount</th>
+                                <th>Tax Rate</th>
+                                <th>Total Due</th>
+                                <th>Due Date</th>
+                                <th>Payment Date</th>
+                                <th>Status</th>
+                                <th>Payment Method</th>
+                                <th>Issue Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ fee.user.username }}</td>
+                                <td>{{ fee.pk }}</td>
+                                <td>${{ fee.amount|floatformat:2 }}</td>
+                                <td>${{ fee.discount|floatformat:2 }}</td>
+                                <td>{{ fee.tax_rate|floatformat:2 }}%</td>
+                                <td>${{ fee.total_amount_due|floatformat:2 }}</td>
+                                <td>{{ fee.due_date }}</td>
+                                <td>
+                                    {% if fee.payment_date %}
+                                        {{ fee.payment_date }}
+                                    {% else %}
+                                        Not Paid
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if fee.is_paid %}
+                                        <b class="text-success"><i class="fa fa-check-circle"></i> Paid</b>
+                                    {% else %}
+                                        {% if fee.is_overdue %}
+                                            <b class="text-danger"><i class="fa fa-times-circle"></i> Overdue</b>
+                                        {% else %}
+                                            <b class="text-warning"><i class="fa fa-clock"></i> Pending</b>
+                                        {% endif %}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if fee.payment_method %}
+                                        {{ fee.payment_method }}
+                                    {% else %}
+                                        N/A
+                                    {% endif %}
+                                </td>
+                                <td>{{ fee.issue_date }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-
-                <table class="table table-hover table-bordered">
-                    <thead class="bg-primary text-white">
-                    <tr>
-                        <th class="text-center">Description</th>
-                        <th class="text-center">Amount</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td class="text-center">Amount</td>
-                        <td class="text-center">{{ fee.amount }} USD</td>
-                    </tr>
-                    <tr>
-                        <td class="text-center">Discount</td>
-                        <td class="text-center">{{ fee.discount }} USD</td>
-                    </tr>
-                    <tr>
-                        <td class="text-center">Tax Rate</td>
-                        <td class="text-center">{{ fee.tax_rate }}%</td>
-                    </tr>
-                    <tr class="table-info">
-                        <td class="text-center font-weight-bold">Total Amount Due</td>
-                        <td class="text-center font-weight-bold">{{ fee.total_amount_due }} USD</td>
-                    </tr>
-                    <tr>
-                        <td class="text-center">Due Date</td>
-                        <td class="text-center">{{ fee.due_date }}</td>
-                    </tr>
-                    <tr>
-                        <td class="text-center">Payment Status</td>
-                        <td class="text-center">
-                            {% if fee.is_paid %}
-                                <span class="badge badge-success">Paid</span>
-                            {% else %}
-                                <span class="badge badge-danger">Pending</span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="text-center">Payment Method</td>
-                        <td class="text-center">{{ fee.payment_method }}</td>
-                    </tr>
-                    <tr>
-                        <td class="text-center">Payment Date</td>
-                        <td class="text-center">
-                            {% if fee.payment_date %}
-                                {{ fee.payment_date }}
-                            {% else %}
-                                <span class="text-muted">Not Paid Yet</span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
             </div>
         </div>
     </div>
+</div>
+
+
+
 {% endblock %}

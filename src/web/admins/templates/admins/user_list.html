@@ -9,7 +9,7 @@ Users List
 {% block content %}
 
 <div class="row">
-    <div class="col-12">
+    <div class="col-6">
         <form method="get">
             <div class="input-group mb-3">
                 {{ user_filter_form }}
@@ -20,6 +20,11 @@ Users List
                 </div>
             </div>
         </form>
+    </div>
+    <div class="col-6">
+        <a href="{% url 'users:user-create' %}" class="btn btn-primary float-right">
+            <i class="fa fa-plus"></i> Add User
+        </a>
     </div>
 </div>
 
@@ -91,6 +96,10 @@ Users List
                                 <a href="{% url 'admins:user-detail' user.pk %}"
                                    class="text-decoration-none"><i
                                         class="mdi mdi-eye icon-sm"></i> View
+                                </a>
+                                <a class="text-danger" href="{% url 'users:user-delete' user.pk %}"
+                                   class="text-decoration-none"><i
+                                        class="fa fa-crosshairs"></i> Delete
                                 </a>
                             </td>
                         </tr>

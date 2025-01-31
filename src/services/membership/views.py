@@ -1,6 +1,8 @@
 from django.db.models import Q
-from django.views.generic import ListView
+from django.urls import reverse_lazy
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from .models import Membership
+from .forms import MembershipForm
 
 
 class MembershipListView(ListView):
@@ -26,8 +28,28 @@ class MembershipListView(ListView):
 
     def get_context_data(self, **kwargs):
         """
-        Pass additional context to the template, such as the search query.
+        Add pagination details to the context.
         """
         context = super().get_context_data(**kwargs)
         context['search_query'] = self.request.GET.get('search', '')  # Add search query to context for form
         return context
+
+
+class MembershipCreateView(CreateView):
+    model = Membership
+    form_class = MembershipForm
+    template_name = 'membership_form.html'
+    success_url = reverse_lazy('membership:membership_list')
+
+
+class MembershipUpdateView(UpdateView):
+    model = Membership
+    form_class = MembershipForm
+    template_name = 'membership_form.html'
+    success_url = reverse_lazy('membership:membership_list')
+
+
+class MembershipDeleteView(DeleteView):
+    model = Membership
+    template_name = 'membership_confirm_delete.html'
+    success_url = reverse_lazy('membership:membership_list')

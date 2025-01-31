@@ -42,4 +42,6 @@ def on_user_registration(sender, instance, created, **kwargs):
     :param kwargs:
     :return:
     """
+
+
     pass

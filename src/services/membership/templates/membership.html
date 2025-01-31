@@ -31,7 +31,11 @@
             </form>
         </div>
     </div>
-
+    <div class="text-right mb-3">
+        <a href="{% url 'membership:membership_add' %}" class="btn btn-primary">
+            <i class="fa fa-plus"></i> Add New Membership
+        </a>
+    </div>
     <div class="row">
         <div class="col-md-12">
             <div class="card">
@@ -41,16 +45,19 @@
                             {% if memberships %}
                                 <thead class="border-bottom">
                                 <tr>
+                                    <th>ID</th>
                                     <th>User</th>
                                     <th>Membership Type</th>
                                     <th>Start Date</th>
                                     <th>End Date</th>
                                     <th>Status</th>
+                                    <th>Action</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 {% for membership in memberships %}
                                     <tr>
+                                        <td>{{ membership.pk }}</td>
                                         <td>{{ membership.user.username }}</td>
                                         <td>{{ membership.get_membership_type_display }}</td>
                                         <td>{{ membership.start_date }}</td>
@@ -61,6 +68,16 @@
                                             {% else %}
                                                 <b class="text-danger"><i class="fa fa-times-circle"></i> Expired</b>
                                             {% endif %}
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'membership:membership_edit' membership.pk %}"
+                                               class="text-decoration-none">
+                                                <i class="mdi mdi-pencil icon-sm"></i> Edit
+                                            </a>
+                                            <a href="{% url 'membership:membership_delete' membership.pk %}"
+                                               class="text-decoration-none text-danger ml-2">
+                                                <i class="mdi mdi-delete icon-sm"></i> Delete
+                                            </a>
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -75,31 +92,42 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="mt-4">
-                <ul class="pagination">
-                    {% if memberships.has_previous %}
-                        <li>
-                            <a href="{% relative_url memberships.previous_page_number 'page' request.GET.urlencode %}">
-                                Previous
-                            </a>
-                        </li>
-                    {% endif %}
-                    <li>
-                        <span>Page {{ memberships.number }} of {{ memberships.paginator.num_pages }}.</span>
+
+    {% if is_paginated %}
+        <nav>
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1&search={{ search_query|urlencode }}">&laquo; First</a>
                     </li>
-                    {% if memberships.has_next %}
-                        <li>
-                            <a href="{% relative_url memberships.next_page_number 'page' request.GET.urlencode %}">
-                                Next
-                            </a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
-    </div>
+                    <li class="page-item">
+                        <a class="page-link"
+                           href="?page={{ page_obj.previous_page_number }}&search={{ search_query|urlencode }}">Previous</a>
+                    </li>
+                {% endif %}
+
+                <li class="page-item disabled">
+                <span class="page-link">
+                    Page {{ page_obj.number }} of {{ paginator.num_pages }}
+                </span>
+                </li>
+
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link"
+                           href="?page={{ page_obj.next_page_number }}&search={{ search_query|urlencode }}">Next</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ paginator.num_pages }}&search={{ search_query|urlencode }}">Last
+                            &raquo;</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+
+
+
 {% endblock %}
 
 {% block script %}

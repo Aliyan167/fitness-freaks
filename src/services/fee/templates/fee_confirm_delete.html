@@ -1,20 +1,41 @@
 {% extends 'base.html' %}
-
+{% block title %}Delete Fee{% endblock %}
+{% load crispy_forms_tags %}
+{% load static %}
 {% block content %}
-<div class="row mb-5">
-    <div class="col-12 text-center">
-        <h1 class="display-4 text-danger font-weight-bold">Delete Fee</h1>
-        <p class="lead">Are you sure you want to delete the fee for <b>{{ fee.user.username }}</b>?</p>
-    </div>
-</div>
 
-<div class="row">
-    <div class="col-md-6 offset-md-3 text-center">
-        <form method="post">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger">Yes, delete</button>
-            <a href="{% url 'fee_list' %}" class="btn btn-secondary">Cancel</a>
-        </form>
+    <div class="page-wrapper">
+        <div class="page-content">
+            <div class="container-fluid">
+
+                <!-- Alert to warn the user -->
+                <div class="row justify-content-center mt-3">
+                    <div class="col-md-6">
+                        <div class="alert alert-danger" role="alert">
+                            <strong>Note:</strong> Deleting this fee record will also remove all related data.
+                        </div>
+
+                        <!-- Card to show fee details and confirm deletion -->
+                        <div class="card shadow-lg">
+                            <div class="card-body">
+                                <h5 class="ms-2">Are you sure you want to delete the fee for "{{ object.user.username }}"?</h5>
+                                <p class="ms-2 text-danger">This action cannot be undone.</p>
+
+                                <!-- Form to confirm deletion -->
+                                <form method="post">
+                                    {% csrf_token %}
+                                    {{ form }}
+                                    <a href="{% url 'fee:fee_list' %}">
+                                        <div class="btn btn-secondary me-2"><i class="fa fa-arrow-left me-2"></i> &nbsp;Go Back</div>
+                                    </a>
+                                    <input class="btn btn-danger float-end" type="submit" value="Confirm Deletion">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </div>
-</div>
 {% endblock %}

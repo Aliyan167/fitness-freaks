@@ -29,9 +29,7 @@ urlpatterns += [
     path('member/', include('src.services.membership.urls')),
     path('trainer/', include('src.services.tranier.urls')),
     path('attendance/',include('src.services.attendence.urls')),
-
-
-
+    path('users/',include('src.services.users.urls'), name='users'),
 
     #  path('inbox/notifications/', include('notifications.urls', namespace='notifications')),
 

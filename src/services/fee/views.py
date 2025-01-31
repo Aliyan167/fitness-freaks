@@ -1,6 +1,8 @@
-from django.views.generic import ListView, DetailView
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.db.models import Q
 from .models import Fee
+from .forms import FeeForm
 
 
 class FeeListView(ListView):
@@ -34,3 +36,27 @@ class FeeDetailView(DetailView):
     context_object_name = 'fee'
 
 
+
+
+class FeeCreateView(CreateView):
+    model = Fee
+    form_class = FeeForm
+    template_name = 'fee_form.html'
+    success_url = reverse_lazy('fee:fee_list')
+
+
+
+
+class FeeUpdateView(UpdateView):
+    model = Fee
+    form_class = FeeForm
+    template_name = 'fee_update.html'
+    success_url = reverse_lazy('fee:fee_list')
+
+
+# DeleteView for deleting a fee record
+
+class FeeDeleteView(DeleteView):
+    model = Fee
+    template_name = 'fee_confirm_delete.html'
+    success_url = reverse_lazy('fee:fee_list')

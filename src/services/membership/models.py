@@ -1,5 +1,4 @@
 from datetime import timedelta
-
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.timezone import now
@@ -32,3 +31,6 @@ class Membership(models.Model):
     def has_expired(self):
         """Check if membership has expired."""
         return now().date() > self.end_date
+
+
+
