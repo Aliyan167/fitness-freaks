@@ -9,7 +9,7 @@ class FeeListView(ListView):
     model = Fee
     template_name = 'fee-list.html'
     context_object_name = 'fee_list'
-    paginate_by = 10  # Set pagination to 10 per page
+    paginate_by = 5  # Set pagination to 10 per page
 
     def get_queryset(self):
         """
