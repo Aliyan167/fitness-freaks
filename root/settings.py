@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'django_filters',
     'phonenumber_field',
+     'django_cron',
 
     # WEB APPS
     'allauth',
@@ -83,6 +84,11 @@ INSTALLED_APPS = [
     'mailchimp_transactional',
     #  'notifications',
 ]
+CRONJOBS = [
+        ('0 0 * * *', 'src.services.membership.cron.MembershipExpirationCronJob.do')  # Runs daily at midnight
+]
+
+
 # MAILCHIMP SETTINGS
 MAILCHIMP_API_KEY = env('MAILCHIMP_API_KEY')
 MAILCHIMP_FROM_EMAIL = env('MAILCHIMP_FROM_EMAIL')
@@ -250,7 +256,6 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
-
 EMAIL_HOST_USER = 'gwtw.mhn@gmail.com'
 EMAIL_HOST_PASSWORD = 'jyrq jbmd grlu vvzs'
 
