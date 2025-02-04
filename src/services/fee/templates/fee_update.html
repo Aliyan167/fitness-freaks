@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}Update Fee{% endblock %}
+{% block title %}Update Membership{% endblock %}
 {% load crispy_forms_tags %}
 {% load static %}
 
@@ -12,7 +12,7 @@
                 <div class="col-md-6">
                     <div class="card shadow-lg">
                         <div class="card-header bg-primary text-white">
-                            <h5 class="mb-0">Update Fee for "{{ object.user.username }}"</h5>
+                            <h5 class="mb-0">Update Membership for "{{ object.user.username }}"</h5>
                         </div>
                         <div class="card-body">
                             <form method="post">
@@ -20,7 +20,7 @@
                                 {{ form|crispy }}
 
                                 <div class="d-flex justify-content-between">
-                                    <a href="{% url 'fee:fee_list' %}" class="btn btn-secondary">
+                                    <a href="{% url 'membership:membership_list' %}" class="btn btn-secondary">
                                         <i class="fa fa-arrow-left me-2"></i>Go Back
                                     </a>
                                     <button type="submit" class="btn btn-success">

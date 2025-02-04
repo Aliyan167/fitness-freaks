@@ -1,12 +1,42 @@
 {% extends 'base.html' %}
-
+{% block title %}Delete Membership{% endblock %}
+{% load crispy_forms_tags %}
+{% load static %}
 {% block content %}
-    <div class="container">
-        <h2>Are you sure you want to delete this membership?</h2>
-        <form method="post">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger">Delete</button>
-            <a href="{% url 'membership:membership_list' %}" class="btn btn-secondary">Cancel</a>
-        </form>
+
+    <div class="page-wrapper">
+        <div class="page-content">
+            <div class="container-fluid">
+
+                <!-- Alert to warn the user -->
+                <div class="row justify-content-center mt-3">
+                    <div class="col-md-6">
+                        <div class="alert alert-danger" role="alert">
+                            <strong>Note:</strong> Deleting this membership will also remove all related data.
+                        </div>
+
+                        <!-- Card to show membership details and confirm deletion -->
+                        <div class="card shadow-lg">
+                            <div class="card-body">
+                                <h5 class="ms-2">Are you sure you want to delete the membership for "{{ object.user.username }}"?</h5>
+                                <p class="ms-2 text-danger">This action cannot be undone.</p>
+
+                                <!-- Form to confirm deletion -->
+                                <form method="post">
+                                    {% csrf_token %}
+                                    {{ form }}
+                                    <a href="{% url 'membership:membership_list' %}">
+                                        <div class="btn btn-secondary me-2"><i class="fa fa-arrow-left me-2"></i> &nbsp;Go Back</div>
+                                    </a>
+                                    <input class="btn btn-danger float-end" type="submit" value="Confirm Deletion">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </div>
+
 {% endblock %}
