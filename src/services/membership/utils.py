@@ -14,11 +14,9 @@ def send_membership_expiration_email(user_email, user_name, package_expiry_date)
 def check_and_send_expiration_notifications():
     """Check all memberships and send expiration email if needed."""
     today = now().date()
-    # Find memberships expiring in the next 30 days
     memberships = Membership.objects.filter(end_date__lte=today + timedelta(days=30), is_active=True)
 
     for membership in memberships:
         send_membership_expiration_email(membership.user.email, membership.user.username, membership.end_date)
-
 
 
