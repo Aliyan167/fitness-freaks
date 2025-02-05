@@ -7,36 +7,7 @@
 
 {% block content %}
 
-<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
-<div id="chart"></div>
-
-<script>
-    // Pie chart options and data
-    var options = {
-        series: [44, 55, 13, 43, 22],
-        chart: {
-            width: 380,
-            type: 'pie',
-        },
-        labels: ['Team A', 'Team B', 'Team C', 'Team D', 'Team E'],
-        responsive: [{
-            breakpoint: 480,
-            options: {
-                chart: {
-                    width: 200
-                },
-                legend: {
-                    position: 'bottom'
-                }
-            }
-        }]
-    };
-
-    // Initialize and render the chart
-    var chart = new ApexCharts(document.querySelector("#chart"), options);
-    chart.render();
-</script>
     <div class="row">
         <div class="col-sm-4">
             <div class="card mini-stats-wid">
