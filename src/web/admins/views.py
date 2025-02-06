@@ -17,7 +17,7 @@ from src.web.accounts.decorators import staff_required_decorator
 from src.web.admins.filters import UserFilter
 from src.services.fee.models import Fee
 from src.services.membership.models import Membership
-from .utils import get_users_per_month, get_memberships_per_month, get_paid_fees_per_month  
+from .utils import get_users_per_month, get_memberships_per_month, get_paid_fees_per_month ,get_users_per_day
 
 
 @method_decorator(staff_required_decorator, name='dispatch')
@@ -37,6 +37,11 @@ class DashboardView(TemplateView):
         context['user_list'] = get_users_per_month()  # initialization(init=False, mid=False, end=False)
         context['membership_list'] = get_memberships_per_month()  # initialization(init=False, mid=False, end=False)
         context['fee_list'] = get_paid_fees_per_month()
+        context['list'] = get_users_per_day()
+
+
+
+
 
 
 
