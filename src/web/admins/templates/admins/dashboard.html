@@ -8,6 +8,32 @@
 {% block content %}
 
 
+<script>
+    // Pie chart options and data
+    var options = {
+        series: [44, 55, 13, 43, 22],
+        chart: {
+            width: 380,
+            type: 'pie',
+        },
+        labels: ['Team A', 'Team B', 'Team C', 'Team D', 'Team E'],
+        responsive: [{
+            breakpoint: 480,
+            options: {
+                chart: {
+                    width: 200
+                },
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }]
+    };
+
+    // Initialize and render the chart
+    var chart = new ApexCharts(document.querySelector("#chart"), options);
+    chart.render();
+</script>
     <div class="row">
         <div class="col-sm-4">
             <div class="card mini-stats-wid">
@@ -19,7 +45,7 @@
                         <div class="media-body">
                             <p class="text-muted mb-2">Registrations</p>
                             <h5 class="mb-0">
-                                100
+                                {{registrations}}
                             </h5>
                         </div>
                     </div>
@@ -34,10 +60,10 @@
                             <i class="bx bx-import h2 text-success mb-0"></i>
                         </div>
                         <div class="media-body">
-                            <p class="text-muted mb-2">YEAR</p>
+                            <p class="text-muted mb-2">Fee Paid</p>
                             <h5 class="mb-0">
-                                $ 150 <span
-                                    class="font-size-14 text-muted">(00)</span>
+                                {{ paid }} <span
+                                    class="font-size-14 text-muted"></span>
                             </h5>
                         </div>
                     </div>
@@ -52,10 +78,10 @@
                             <i class="bx bx-export h2 text-danger mb-0"></i>
                         </div>
                         <div class="media-body">
-                            <p class="text-muted mb-2">Month</p>
+                            <p class="text-muted mb-2">Subscriptions</p>
                             <h5 class="mb-0">
-                                $ 30 <span
-                                    class="font-size-14 text-muted">(00)</span>
+                                {{subscriptions}} <span
+                                    class="font-size-14 text-muted"></span>
                             </h5>
                         </div>
                     </div>
@@ -317,14 +343,14 @@
     <script>
         var options_year_months = {
             series: [{
-                name: 'A',
-                data: [12, 40, 28, 51, 42, 109, 100, 51, 42, 109, 100, 101]
+                name: 'Users',
+                data: {{user_list}}
             }, {
-                name: 'B',
-                data: [11, 32, 45, 32, 34, 52, 32, 45, 32, 34, 52, 41]
+                name: 'Members',
+                data: {{membership_list}}
             }, {
-                name: 'C',
-                data: [12, 40, 100, 62, 74, 82, 91, 100, 40, 55, 62, 74]
+                name: 'Fee',
+                data: {{fee_list}}
             }],
             chart: {
                 height: 225,
@@ -370,8 +396,8 @@
 
         var options_year_months_registrations = {
             series: [{
-                name: 'A',
-                data: [100, 40, 28, 51, 42, 109, 100, 40, 28, 42, 109, 100]
+                name: 'Registrations',
+                data: {{user_list}}
             }],
             chart: {
                 type: 'area',

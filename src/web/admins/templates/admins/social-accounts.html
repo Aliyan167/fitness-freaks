@@ -47,7 +47,7 @@
             <div class="card border-0 shadow-sm mb-3" style="border-radius: 1rem;">
                 <div class="card-body">
                     <h3 class="card-title text-center mb-4">Link Your Account</h3>
-                    <a href="#"
+                    <a href="{% provider_login_url 'Google' process='connect'  %}"
                        class="btn btn-outline-danger m-2 btn-lg btn-block">
                         <i class="bx bxl-google"></i> Connect Google
                     </a>
@@ -66,3 +66,4 @@
 </div>
 
 {% endblock %}
+

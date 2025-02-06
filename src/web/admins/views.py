@@ -9,11 +9,15 @@ from django.views import View
 from django.views.generic import (
     TemplateView, ListView, DetailView, UpdateView
 )
+from django.db.models import Sum    
 
 # from faker_data import initialization
 from src.services.users.models import User
 from src.web.accounts.decorators import staff_required_decorator
 from src.web.admins.filters import UserFilter
+from src.services.fee.models import Fee
+from src.services.membership.models import Membership
+from .utils import get_users_per_month, get_memberships_per_month, get_paid_fees_per_month  
 
 
 @method_decorator(staff_required_decorator, name='dispatch')
@@ -27,7 +31,15 @@ class DashboardView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(DashboardView, self).get_context_data(**kwargs)
-        # context = calculate_statistics(context)
+        context['registrations'] = User.objects.filter(is_active=True).count()  
+        context['paid'] = Fee.objects.filter(status='Paid').aggregate(Sum('amount'))['amount__sum']
+        context['subscriptions'] = Membership.objects.filter(is_active=True).count()
+        context['user_list'] = get_users_per_month()  # initialization(init=False, mid=False, end=False)
+        context['membership_list'] = get_memberships_per_month()  # initialization(init=False, mid=False, end=False)
+        context['fee_list'] = get_paid_fees_per_month()
+
+
+
         # initialization(init=False, mid=False, end=False)
         return context
 
