@@ -9,24 +9,39 @@ class FeeListView(ListView):
     model = Fee
     template_name = 'fee-list.html'
     context_object_name = 'fee_list'
-    paginate_by = 5  # Set pagination to 10 per page
+    paginate_by = 5  # Set pagination to 5 per page
 
     def get_queryset(self):
         """
-        Optionally filter by search query and order by the 'order' field or 'created_at'.
+        Filter by search query, status, fee type, and due date.
         """
         search_query = self.request.GET.get('search', '')
+        status_filter = self.request.GET.get('status', '')
+        fee_type_filter = self.request.GET.get('fee_type', '')
+        due_date_filter = self.request.GET.get('due_date', '')
+        
         queryset = Fee.objects.all()
 
         if search_query:
             queryset = queryset.filter(Q(user__username__icontains=search_query))
+        
+        if status_filter:
+            queryset = queryset.filter(status=status_filter)
 
-        # Ensure the list is ordered by the 'order' field or any other field you want.
-        return queryset.order_by('order')  # Or 'created_at' if you prefer it to be in chronological order
+        if fee_type_filter:
+            queryset = queryset.filter(fee_type=fee_type_filter)
+        
+        if due_date_filter:
+            queryset = queryset.filter(due_date=due_date_filter)
+
+        return queryset.order_by('-created_at')  # Ordered by latest created
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['search_query'] = self.request.GET.get('search', '')  # Add search query to context
+        context['search_query'] = self.request.GET.get('search', '')
+        context['status_filter'] = self.request.GET.get('status', '')
+        context['fee_type_filter'] = self.request.GET.get('fee_type', '')
+        context['due_date_filter'] = self.request.GET.get('due_date', '')
         return context
 
 

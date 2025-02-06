@@ -7,159 +7,133 @@ Users List
 {% endblock %}
 
 {% block content %}
-
-<div class="row">
-    <div class="col-6">
-        <form method="get">
-            <div class="input-group mb-3">
-                {{ user_filter_form }}
-                <div class="input-group-append">
-                    <button class="btn btn-primary" type="submit">
-                        <i class="fa fa-search"></i> Search
-                    </button>
-                </div>
-            </div>
-        </form>
-    </div>
-    <div class="col-6">
-        <a href="{% url 'users:user-create' %}" class="btn btn-primary float-right">
+<div class="card p-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="font-weight-bold">Users List</h4>
+        <a href="{% url 'users:user-create' %}" class="btn btn-primary">
             <i class="fa fa-plus"></i> Add User
         </a>
     </div>
-</div>
 
-<div class="row">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-borderless">
-                        {% if user_list %}
-                        <thead class="border-bottom">
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Username</th>
-                            <th>Email</th>
-                            <th>
-                                Package
-                            </th>
-                            <th>Referred By</th>
-                            <th>Active</th>
-                            <th>Action</th>
-                        </tr>
-                        </thead>
-+
-                        <tbody>
+    <!-- Filters Section -->
+    <form method="get" class="row mb-3">
+        <div class="col-md-4">
+            <input type="text" name="search" class="form-control" placeholder="Search by username..." value="{{ search_query }}">
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-secondary w-100">
+                <i class="fa fa-search"></i> Search
+            </button>
+        </div>
+    </form>
 
-                        {% for user in user_list %}
-                        <tr>
-                            <td>{{ user.pk }}</td>
-                            <td>{{ user.first_name }} {{ user.last_name }}</td>
-                            <td>{{ user.username }}</td>
-                            <td>{{ user.email }}</td>
-                            <td>
-                                {% if not user.current_subscription %}
+    <!-- Users Table -->
+    <div class="table-responsive">
+        <table class="table table-striped">
+            {% if user_list %}
+            <thead class="border-bottom">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Package</th>
+                    <th>Referred By</th>
+                    <th>Active</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in user_list %}
+                    <tr>
+                        <td>{{ user.pk }}</td>
+                        <td>{{ user.first_name }} {{ user.last_name }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>
+                            {% if not user.current_subscription %}
                                 <b class="text-danger"><i class="fa fa-times-circle"></i> Free</b>
-                                {% else %}
+                            {% else %}
                                 <b class="text-success">
                                     <i class="fa fa-check-circle"></i> {{ user.current_subscription.package.name }}
                                 </b>
-                                {% endif %}
-                            </td>
-                            <td>
-
-                                {% if user.referred_by %}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if user.referred_by %}
                                 <b>
                                     <a href="{% url 'admins:user-detail' user.referred_by.pk %}">
                                         {{ user.referred_by.username }}
                                     </a>
                                 </b>
-                                {% else %}
-                                <b class="text-danger">
-                                    None
-                                </b>
-                                {% endif %}
-
-                            </td>
-                            <td>
-                                {% if user.is_active %}
+                            {% else %}
+                                <b class="text-danger">None</b>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if user.is_active %}
                                 <b class="text-success"><i class="fa fa-check-circle"></i></b>
-
-                                {% else %}
+                            {% else %}
                                 <b class="text-danger"><i class="fa fa-times-circle"></i></b>
-
-                                {% endif %}
-                            </td>
-
-                            <td>
-                                <a href="{% url 'admins:user-detail' user.pk %}"
-                                   class="text-decoration-none"><i
-                                        class="mdi mdi-eye icon-sm"></i> View
-                                </a>
-                                <a class="text-danger" href="{% url 'users:user-delete' user.pk %}"
-                                   class="text-decoration-none"><i
-                                        class="fa fa-crosshairs"></i> Delete
-                                </a>
-                            </td>
-                        </tr>
-                        {% endfor %}
-
-                        </tbody>
-                        {% else %}
-                        <th class="text-danger">No users data available.</th>
-                        {% endif %}
-                    </table>
-                </div>
-
-
-            </div>
-        </div>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'admins:user-detail' user.pk %}" class="btn btn-sm btn-outline-primary">
+                                <i class="fa fa-eye"></i>
+                            </a>
+                            <a href="{% url 'users:user-delete' user.pk %}" class="btn btn-sm btn-outline-danger">
+                                <i class="fa fa-trash"></i>
+                            </a>
+                        </td>
+                        
+                    </tr>
+                {% endfor %}
+            </tbody>
+            {% else %}
+                <tr>
+                    <td colspan="8" class="text-center text-danger">No users data available.</td>
+                </tr>
+            {% endif %}
+        </table>
     </div>
 </div>
 
-<div class="row">
-    <div class="col-md-12">
-        <div class="mt-4">
-            <ul class="pagination">
-                {% if user_list.has_previous %}
-                <li>
-                            <span>
-                                <a href="{% relative_url user_list.previous_page_number 'page' request.GET.urlencode %}">
-                                    Previous
-                                </a>
-                            </span>
+<!-- Pagination Section -->
+{% if is_paginated %}
+    <nav>
+        <ul class="pagination justify-content-center">
+            {% if user_list.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1&search={{ search_query|urlencode }}">« First</a>
                 </li>
-                {% endif %}
-                <li class="">
-                    <span>Page {{ user_list.number }} of {{ user_list.paginator.num_pages }}.</span>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ user_list.previous_page_number }}&search={{ search_query|urlencode }}">Previous</a>
                 </li>
-                {% if user_list.has_next %}
-                <li>
-                            <span>
-                                <a href="{% relative_url user_list.next_page_number 'page' request.GET.urlencode %}">
-                                    Next
-                                </a>
-                            </span>
+            {% endif %}
+            <li class="page-item disabled">
+                <span class="page-link">Page {{ user_list.number }} of {{ user_list.paginator.num_pages }}</span>
+            </li>
+            {% if user_list.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ user_list.next_page_number }}&search={{ search_query|urlencode }}">Next</a>
                 </li>
-                {% endif %}
-            </ul>
-        </div>
-    </div>
-</div>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ user_list.paginator.num_pages }}&search={{ search_query|urlencode }}">Last »</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endif %}
 
 {% endblock %}
 
 {% block js_code %}
 <script>
     $(document).ready(function () {
-
         $('label').hide();
         $('input').addClass('form-control');
         $('select').addClass('form-control');
-
+        $('[data-toggle="tooltip"]').tooltip();
     });
 </script>
 {% endblock %}
-
-
