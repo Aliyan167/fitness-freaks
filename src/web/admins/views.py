@@ -38,6 +38,7 @@ class DashboardView(TemplateView):
         context['membership_list'] = get_memberships_per_month()  # initialization(init=False, mid=False, end=False)
         context['fee_list'] = get_paid_fees_per_month()
         context['list'] = get_users_per_day()
+        
 
 
 

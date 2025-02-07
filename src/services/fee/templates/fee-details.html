@@ -25,7 +25,7 @@
                                 <th>Amount</th>
                                 <th>Discount</th>
                                 <th>Tax Rate</th>
-                                <th>Total Due</th>
+                                <th>Total </th>
                                 <th>Due Date</th>
                                 <th>Payment Date</th>
                                 <th>Status</th>
@@ -38,7 +38,7 @@
                                 <td>{{ fee.user.username }}</td>
                                 <td>{{ fee.pk }}</td>
                                 <td>{{ fee.amount|floatformat:2 }}</td>
-                                <td>{{ fee.discount|floatformat:2 }}</td>
+                                <td>RS.  {{ fee.discount|floatformat:2 }} </td>
                                 <td>{{ fee.tax_rate|floatformat:2 }}%</td>
                                 <td>{{ fee.total_amount_due|floatformat:2 }}</td>
                                 <td>{{ fee.due_date }}</td>

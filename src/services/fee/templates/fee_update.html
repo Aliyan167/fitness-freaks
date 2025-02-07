@@ -1,39 +1,35 @@
 {% extends 'base.html' %}
-{% block title %}Update Membership{% endblock %}
-{% load crispy_forms_tags %}
 {% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %} Update Fee {% endblock %}
 
 {% block content %}
-<div class="page-wrapper">
-    <div class="page-content">
-        <div class="container-fluid">
+    <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh; background-color: #f8f9fa;">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0 rounded-3">
+                <div class="card-body p-4">
+                    <h2 class="text-center mb-4 text-primary">Update Fee for "{{ object.user.username }}"</h2>
 
-            <div class="row justify-content-center mt-3">
-                <div class="col-md-6">
-                    <div class="card shadow-lg">
-                        <div class="card-header bg-primary text-white">
-                            <h5 class="mb-0">Update Membership for "{{ object.user.username }}"</h5>
+                    <form method="post" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            {{ form|crispy }}
                         </div>
-                        <div class="card-body">
-                            <form method="post">
-                                {% csrf_token %}
-                                {{ form|crispy }}
 
-                                <div class="d-flex justify-content-between">
-                                    <a href="{% url 'membership:membership_list' %}" class="btn btn-secondary">
-                                        <i class="fa fa-arrow-left me-2"></i>Go Back
-                                    </a>
-                                    <button type="submit" class="btn btn-success">
-                                        <i class="mdi mdi-content-save me-2"></i>Save Changes
-                                    </button>
-                                </div>
-                            </form>
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'fee:fee_list' %}" class="btn btn-secondary">
+                                <i class="fa fa-arrow-left me-2"></i>Go Back
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="mdi mdi-content-save me-2"></i> Save Changes
+                            </button>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
-
         </div>
     </div>
-</div>
+
 {% endblock %}
