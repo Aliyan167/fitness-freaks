@@ -5,7 +5,8 @@ from .forms import TrainerForm
 from django.urls import reverse_lazy
 
 class TrainerListView(TemplateView):
-    template_name = 'trainer.html'
+    template_name = 'tranier/trainer.html'
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -15,7 +16,7 @@ class TrainerListView(TemplateView):
 
         # Filter trainers based on the search query
         if search_query:
-            trainers = Trainer.objects.filter(user__username__icontains=search_query)
+            trainers = Trainer.objects.filter(member__membername__icontains=search_query)
         else:
             trainers = Trainer.objects.all()
 
@@ -28,16 +29,16 @@ class TrainerListView(TemplateView):
 class TrainerCreateView(CreateView):
     model = Trainer
     form_class = TrainerForm
-    template_name = "trainer_form.html"
+    template_name = "tranier/trainer_form.html"
     success_url = reverse_lazy("tranier:trainer_list")
 
 class TrainerUpdateView(UpdateView):
     model = Trainer
     form_class = TrainerForm
-    template_name = "trainer_form.html"
+    template_name = "tranier/trainer_form.html"
     success_url = reverse_lazy("tranier:trainer_list")
 
 class TrainerDeleteView(DeleteView):
     model = Trainer
-    template_name = "trainer_confirm_delete.html"
+    template_name = "tranier/trainer_confirm_delete.html"
     success_url = reverse_lazy("tranier:trainer_list")

@@ -11,6 +11,8 @@ class FeeListView(ListView):
     context_object_name = 'fee_list'
     paginate_by = 5  # Set pagination to 5 per page
 
+    from django.db.models import Q
+
     def get_queryset(self):
         """
         Filter by search query, status, fee type, and due date.
@@ -19,30 +21,22 @@ class FeeListView(ListView):
         status_filter = self.request.GET.get('status', '')
         fee_type_filter = self.request.GET.get('fee_type', '')
         due_date_filter = self.request.GET.get('due_date', '')
-        
+
         queryset = Fee.objects.all()
 
         if search_query:
-            queryset = queryset.filter(Q(user__username__icontains=search_query))
-        
+            queryset = queryset.filter(Q(member__full_name__icontains=search_query))
+
         if status_filter:
             queryset = queryset.filter(status=status_filter)
 
         if fee_type_filter:
             queryset = queryset.filter(fee_type=fee_type_filter)
-        
+
         if due_date_filter:
             queryset = queryset.filter(due_date=due_date_filter)
 
         return queryset.order_by('-created_at')  # Ordered by latest created
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['search_query'] = self.request.GET.get('search', '')
-        context['status_filter'] = self.request.GET.get('status', '')
-        context['fee_type_filter'] = self.request.GET.get('fee_type', '')
-        context['due_date_filter'] = self.request.GET.get('due_date', '')
-        return context
 
 
 class FeeDetailView(DetailView):

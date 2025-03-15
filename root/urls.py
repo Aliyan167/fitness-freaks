@@ -18,7 +18,7 @@ handler500 = handler500
 urlpatterns += [
     path('', include('src.web.urls')),
     path('', include('src.api.urls')),
-  #  path('attendance/', include('src.services.attendance.urls')),
+    #  path('attendance/', include('src.services.attendance.urls')),
 ]
 
 """ EXTERNAL REQUIRED APPS ----------------------------------------------------------------------------------------- """
@@ -26,10 +26,11 @@ urlpatterns += [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
     path('fee/', include('src.services.fee.urls')),
-    path('member/', include('src.services.membership.urls')),
+    path('membership/', include('src.services.membership.urls')),
     path('trainer/', include('src.services.tranier.urls')),
-    path('attendance/',include('src.services.attendence.urls')),
-    path('users/',include('src.services.users.urls'), name='users'),
+    path('attendance/', include('src.services.attendence.urls')),
+    path('members/', include('src.services.members.urls')),
+    path('users/', include('src.services.users.urls'), name='users'),
 
     #  path('inbox/notifications/', include('notifications.urls', namespace='notifications')),
 

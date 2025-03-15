@@ -8,23 +8,23 @@ class FeeAdmin(admin.ModelAdmin):
     Admin interface for the Fee model.
     """
     list_display = (
-        'user', 'order', 'amount', 'discount', 'tax_rate', 'total_amount', 'status',
-        'is_paid', 'due_date', 'payment_date', 'created_at'
+        'member', 'order', 'amount', 'discount', 'tax_rate', 'total_amount', 'status',
+        'is_paid', 'payment_date', 'created_at'
     )
     list_filter = (
-        'status', 'is_paid', 'due_date', 'payment_date', 'created_at', 'order'
+        'status', 'is_paid', 'payment_date', 'created_at', 'order'
     )
-    search_fields = ('user__username', 'user__email', 'status', 'order')
+    search_fields = ('member__membername', 'member__email', 'status', 'order')
 
     ordering = ('created_at',)
     readonly_fields = ('created_at', 'updated_at', 'total_amount')
 
     fieldsets = (
         ("Fee Information", {
-            'fields': ('user', 'order', 'amount', 'discount', 'tax_rate', 'total_amount', 'status', 'is_paid')
+            'fields': ('member', 'order', 'amount', 'discount', 'tax_rate', 'total_amount', 'status', 'is_paid')
         }),
         ("Dates", {
-            'fields': ('issue_date', 'due_date', 'payment_date', 'created_at', 'updated_at')
+            'fields': ('issue_date', 'payment_date', 'created_at', 'updated_at')
         }),
         ("Payment Details", {
             'fields': ('payment_method',)
@@ -36,7 +36,7 @@ class FeeAdmin(admin.ModelAdmin):
         Optimize the queryset to prefetch related fields for better performance.
         """
         queryset = super().get_queryset(request)
-        return queryset.select_related('user')
+        return queryset.select_related('member')
 
     def get_form(self, request, obj=None, **kwargs):
         """

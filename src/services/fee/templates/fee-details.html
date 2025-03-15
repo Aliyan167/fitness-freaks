@@ -21,27 +21,26 @@
                         <thead class="border-bottom">
                             <tr>
                                 <th>User</th>
-                                <th>Order ID</th>
+                                <th>ID</th>
                                 <th>Amount</th>
                                 <th>Discount</th>
                                 <th>Tax Rate</th>
                                 <th>Total </th>
-                                <th>Due Date</th>
                                 <th>Payment Date</th>
                                 <th>Status</th>
                                 <th>Payment Method</th>
-                                <th>Issue Date</th>
+                                
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>{{ fee.user.username }}</td>
+                                <td>{{ fee.member }}</td>
                                 <td>{{ fee.pk }}</td>
                                 <td>{{ fee.amount|floatformat:2 }}</td>
                                 <td>RS.  {{ fee.discount|floatformat:2 }} </td>
                                 <td>{{ fee.tax_rate|floatformat:2 }}%</td>
                                 <td>{{ fee.total_amount_due|floatformat:2 }}</td>
-                                <td>{{ fee.due_date }}</td>
+
                                 <td>
                                     {% if fee.payment_date %}
                                         {{ fee.payment_date }}
@@ -67,7 +66,6 @@
                                         N/A
                                     {% endif %}
                                 </td>
-                                <td>{{ fee.issue_date }}</td>
                             </tr>
                         </tbody>
                     </table>

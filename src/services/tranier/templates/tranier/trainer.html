@@ -8,11 +8,12 @@
                 <i class="fa fa-plus"></i> Add New Trainer
             </a>
         </div>
-        
+
         <!-- Filters Section -->
         <form method="get" class="row mb-3">
             <div class="col-md-4">
-                <input type="text" name="search" class="form-control" placeholder="Search by username..." value="{{ search_query }}">
+                <input type="text" name="search" class="form-control" placeholder="Search by membername..."
+                       value="{{ search_query }}">
             </div>
             <div class="col-md-2">
                 <button type="submit" class="btn btn-secondary w-100">
@@ -24,35 +25,38 @@
         <!-- Trainer Table -->
         <div class="table-responsive">
             <table class="table table-striped">
-                {% if trainers %}
+                {% if object_list %}
                     <thead>
-                        <tr>
-                            <th>User</th>
-                            <th>Trainer</th>
-                            <th>Specialization</th>
-                            <th>Experience</th>
-                            <th>Phone Number</th>
-                            <th>Actions</th>
-                        </tr>
+                    <tr>
+                        <th>member</th>
+                        <th>Trainer</th>
+                        <th>Specialization</th>
+                        <th>Experience</th>
+                        <th>Phone Number</th>
+                        <th>Actions</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        {% for trainer in trainers %}
-                            <tr>
-                                <td>{{ trainer.user.username }}</td>
-                                <td>{{ trainer.name }}</td>
-                                <td>{{ trainer.specialization }}</td>
-                                <td>{{ trainer.experience }} years</td>
-                                <td>{{ trainer.phone_number }}</td>
-                                <td>
-                                    <a href="{% url 'tranier:trainer_edit' trainer.pk %}" class="btn btn-sm btn-outline-primary">
-                                        <i class="fa fa-edit"></i>
-                                    </a>
-                                    <a href="{% url 'tranier:trainer_delete' trainer.pk %}" class="btn btn-sm btn-outline-danger">
-                                        <i class="fa fa-trash"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        {% endfor %}
+                    {% for trainer in object_list %}
+                        <tr>
+                            <td>{{ trainer.pk }}</td>
+                            <td>{{ trainer.member.membername }}</td>
+                            <td>{{ trainer.name }}</td>
+                            <td>{{ trainer.specialization }}</td>
+                            <td>{{ trainer.experience }} years</td>
+                            <td>{{ trainer.phone_number }}</td>
+                            <td>
+                                <a href="{% url 'tranier:trainer_edit' trainer.pk %}"
+                                   class="btn btn-sm btn-outline-primary">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                                <a href="{% url 'tranier:trainer_delete' trainer.pk %}"
+                                   class="btn btn-sm btn-outline-danger">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
                     </tbody>
                 {% else %}
                     <tr>
@@ -88,7 +92,8 @@
                            href="?page={{ page_obj.next_page_number }}&search={{ search_query|urlencode }}">Next</a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ paginator.num_pages }}&search={{ search_query|urlencode }}">Last &raquo;</a>
+                        <a class="page-link" href="?page={{ paginator.num_pages }}&search={{ search_query|urlencode }}">Last
+                            &raquo;</a>
                     </li>
                 {% endif %}
             </ul>

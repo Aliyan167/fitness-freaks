@@ -1,8 +1,13 @@
 from datetime import timedelta
+
 from django.db import models
 from django.contrib.auth.models import User
-from django.utils.timezone import now
+from django.utils import timezone
 from django.conf import settings
+from model_utils.models import now
+
+from src.services.members.models import Member
+
 
 
 class Membership(models.Model):
@@ -12,16 +17,18 @@ class Membership(models.Model):
         ('Premium', 'Premium'),
     ]
 
-    user = models.OneToOneField(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='membership'
+    member = models.ForeignKey(
+        Member,
+        on_delete=models.CASCADE,
+        related_name='memberships',
     )
     membership_type = models.CharField(max_length=20, choices=MEMBERSHIP_TYPES, default='Basic')
-    start_date = models.DateField(auto_now_add=True)
+    start_date = models.DateField(default=timezone.now)
     end_date = models.DateField()
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return f"{self.user.username} - {self.membership_type}"
+        return f"{self.member} - {self.membership_type}"
 
     def renew_membership(self, months=1):
         """Extend membership by given months."""

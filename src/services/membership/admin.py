@@ -5,9 +5,9 @@ from .models import Membership
 
 @admin.register(Membership)
 class MembershipAdmin(admin.ModelAdmin):
-    list_display = ('user', 'membership_type', 'start_date', 'end_date', 'is_active')
+    list_display = ('member', 'membership_type', 'start_date', 'end_date', 'is_active')
     list_filter = ('membership_type', 'is_active', 'start_date', 'end_date')
-    search_fields = ('user__username',)
+    search_fields = ('member__membername',)
     readonly_fields = ('start_date',)
 
     def has_expired(self, obj):

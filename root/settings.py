@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'django_filters',
     'phonenumber_field',
-     'django_cron',
+    'django_cron',
 
     # WEB APPS
     'allauth',
@@ -72,8 +72,7 @@ INSTALLED_APPS = [
     'src.services.attendence',
     'src.services.membership',
     'src.services.tranier',
-
-
+    'src.services.members',
 
     # WEB APPS
     'src.web.website',
@@ -85,9 +84,8 @@ INSTALLED_APPS = [
     #  'notifications',
 ]
 CRONJOBS = [
-        ('0 0 * * *', 'src.services.membership.cron.MembershipExpirationCronJob.do')  # Runs daily at midnight
+    ('0 0 * * *', 'src.services.membership.cron.MembershipExpirationCronJob.do')  # Runs daily at midnight
 ]
-
 
 # MAILCHIMP SETTINGS
 MAILCHIMP_API_KEY = env('MAILCHIMP_API_KEY')

@@ -26,7 +26,7 @@
         <!-- Membership Table -->
         <div class="table-responsive">
             <table class="table table-striped">
-                {% if memberships %}
+                {% if object_list %}
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -39,10 +39,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for membership in memberships %}
+                        {% for membership in object_list %}
                             <tr>
                                 <td>{{ membership.pk }}</td>
-                                <td>{{ membership.user.username }}</td>
+                                <td>{{ membership.member }}</td>
                                 <td>{{ membership.get_membership_type_display }}</td>
                                 <td>{{ membership.start_date }}</td>
                                 <td>{{ membership.end_date }}</td>

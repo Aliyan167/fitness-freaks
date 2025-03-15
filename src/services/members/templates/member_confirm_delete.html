@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}Delete Fee{% endblock %}
+{% block title %}Delete Member{% endblock %}
 {% load crispy_forms_tags %}
 {% load static %}
 {% block content %}
@@ -12,20 +12,19 @@
                 <div class="row justify-content-center mt-3">
                     <div class="col-md-6">
                         <div class="alert alert-danger" role="alert">
-                            <strong>Note:</strong> Deleting this fee record will also remove all related data.
+                            <strong>Warning:</strong> Deleting this member will also remove all related data permanently.
                         </div>
 
-                        <!-- Card to show fee details and confirm deletion -->
+                        <!-- Card to show member details and confirm deletion -->
                         <div class="card shadow-lg">
                             <div class="card-body">
-                                <h5 class="ms-2">Are you sure you want to delete the fee for "{{ object.member.membername }}"?</h5>
+                                <h5 class="ms-2">Are you sure you want to delete "{{ member.name }}"?</h5>
                                 <p class="ms-2 text-danger">This action cannot be undone.</p>
 
                                 <!-- Form to confirm deletion -->
                                 <form method="post">
                                     {% csrf_token %}
-                                    {{ form }}
-                                    <a href="{% url 'fee:fee_list' %}">
+                                    <a href="{% url 'members:members-list' %}">
                                         <div class="btn btn-secondary me-2"><i class="fa fa-arrow-left me-2"></i> &nbsp;Go Back</div>
                                     </a>
                                     <input class="btn btn-danger float-end" type="submit" value="Confirm Deletion">
@@ -38,4 +37,5 @@
             </div>
         </div>
     </div>
+
 {% endblock %}

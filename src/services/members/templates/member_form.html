@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 
-{% block title %}Add New Fee{% endblock %}
+{% block title %} Create Member {% endblock %}
 
 {% block content %}
     <div class="container d-flex justify-content-center align-items-center" style="min-height: 85vh; background-color: #f8f9fa; margin-top: -50px;">
         <div class="col-md-6">
-            <div class="card shadow border-0 rounded-3">
+            <div class="card shadow-lg border-0 rounded-3">
                 <div class="card-body p-4">
-                    <h2 class="text-center mb-4 text-primary">Add New Fee</h2>
+                    <h2 class="text-center mb-4 text-primary">Create Member</h2>
 
                     <form method="post" class="needs-validation" novalidate>
                         {% csrf_token %}
@@ -19,8 +19,9 @@
 
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-success btn-lg">
-                                <i class="fa fa-save"></i> Save Fee
+                                <i class="fa fa-save"></i> Save Member
                             </button>
+                            <a href="#" class="btn btn-secondary btn-lg">Cancel</a>
                         </div>
                     </form>
                 </div>

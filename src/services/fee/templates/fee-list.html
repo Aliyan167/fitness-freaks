@@ -42,9 +42,9 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>User</th>
+                            <th>Member</th>
                             <th>Amount</th>
-                            <th>Due Date</th>
+                            <th>Date</th>
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>
@@ -53,9 +53,9 @@
                         {% for fee in fee_list %}
                             <tr>
                                 <td>{{ fee.pk }}</td>
-                                <td>{{ fee.user.username }}</td>
-                                <td>${{ fee.amount|floatformat:2 }}</td>
-                                <td>{{ fee.due_date }}</td>
+                                <td>{{ fee.member.full_name }}</td>
+                                <td>{{ fee.amount|floatformat:2 }}</td>
+                                <td>{{ fee.payment_date }}</td>
                                 <td>
                                     {% if fee.is_paid %}
                                         <span class="badge badge-success">Paid</span>
