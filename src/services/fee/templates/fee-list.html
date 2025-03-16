@@ -52,7 +52,7 @@
                     <tbody>
                         {% for fee in fee_list %}
                             <tr>
-                                <td>{{ fee.pk }}</td>
+                                <td>{{ forloop.counter }}</td>
                                 <td>{{ fee.member.full_name }}</td>
                                 <td>{{ fee.amount|floatformat:2 }}</td>
                                 <td>{{ fee.payment_date }}</td>

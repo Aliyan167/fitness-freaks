@@ -34,7 +34,6 @@ Users List
             <thead class="border-bottom">
                 <tr>
                     <th>ID</th>
-                    <th>Name</th>
                     <th>Username</th>
                     <th>Email</th>
                     <th>Package</th>
@@ -46,8 +45,7 @@ Users List
             <tbody>
                 {% for user in user_list %}
                     <tr>
-                        <td>{{ user.pk }}</td>
-                        <td>{{ user.first_name }} {{ user.last_name }}</td>
+                        <td>{{ forloop.counter }}</td>
                         <td>{{ user.username }}</td>
                         <td>{{ user.email }}</td>
                         <td>

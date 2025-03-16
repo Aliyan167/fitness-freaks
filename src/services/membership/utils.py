@@ -1,23 +1,35 @@
 from django.core.mail import send_mail
 from django.utils import timezone
-from .models import Membership
 from django.conf import settings
+from src.services.members.models import Member
+from src.services.membership.models import Membership
 
 
-def send_expiration_email():
-    # Get today's date
+def send_expired_membership_email():
+    """
+    Checks for expired memberships and sends an email notification
+    to the respective members.
+    """
     today = timezone.now().date()
 
-    # Get members whose expiration date is within the next 30 days
-    expiration_threshold = today + timezone.timedelta(days=30)
+    # Get all memberships that have expired
+    expired_memberships = Membership.objects.filter(end_date__lt=today, is_active=True)
 
-    memberships_to_notify = Membership.objects.filter(expiration_date__lte=expiration_threshold,
-                                                      expiration_date__gt=today)
+    for membership in expired_memberships:
+        member_email = membership.member.email
+        subject = "Your Membership Has Expired"
+        message = (
+            f"Dear {membership.member},\n\n"
+            f"Your {membership.membership_type} membership expired on {membership.end_date.strftime('%B %d, %Y')}."
+            f" Please renew your membership to continue enjoying the benefits.\n\n"
+            f"Best Regards,\nYour Organization"
+        )
 
-    for membership in memberships_to_notify:
-        # Send an email to the member
-        subject = "Your Membership is About to Expire"
-        message = f"Dear {membership.member.username},\n\nYour membership will expire on {membership.expiration_date.strftime('%B %d, %Y')}. Please renew your membership to continue enjoying the benefits."
-        recipient_list = [membership.member.email]
+        # Send email
+        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [member_email])
 
-        send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, recipient_list)
+        # Mark membership as inactive after email is sent
+        membership.is_active = False
+        membership.save()
+
+    return f"Sent {expired_memberships.count()} expiration emails."

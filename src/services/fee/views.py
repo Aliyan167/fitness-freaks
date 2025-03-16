@@ -4,18 +4,15 @@ from django.db.models import Q
 from .models import Fee
 from .forms import FeeForm
 
-
 class FeeListView(ListView):
     model = Fee
     template_name = 'fee-list.html'
     context_object_name = 'fee_list'
-    paginate_by = 5  # Set pagination to 5 per page
-
-    from django.db.models import Q
+    paginate_by = 5  # Pagination to show 5 records per page
 
     def get_queryset(self):
         """
-        Filter by search query, status, fee type, and due date.
+        Filters fee records based on search query, status, fee type, and due date.
         """
         search_query = self.request.GET.get('search', '')
         status_filter = self.request.GET.get('status', '')
@@ -34,9 +31,10 @@ class FeeListView(ListView):
             queryset = queryset.filter(fee_type=fee_type_filter)
 
         if due_date_filter:
-            queryset = queryset.filter(due_date=due_date_filter)
+            queryset = queryset.filter(due_date__date=due_date_filter)
 
-        return queryset.order_by('-created_at')  # Ordered by latest created
+        return queryset.order_by('created_at')  # Orders oldest first, change to '-created_at' for newest first
+
 
 
 class FeeDetailView(DetailView):

@@ -8,32 +8,32 @@
 {% block content %}
 
 
-<script>
-    // Pie chart options and data
-    var options = {
-        series: [44, 55, 13, 43, 22],
-        chart: {
-            width: 380,
-            type: 'pie',
-        },
-        labels: ['Team A', 'Team B', 'Team C', 'Team D', 'Team E'],
-        responsive: [{
-            breakpoint: 480,
-            options: {
-                chart: {
-                    width: 200
-                },
-                legend: {
-                    position: 'bottom'
+    <script>
+        // Pie chart options and data
+        var options = {
+            series: [44, 55, 13, 43, 22],
+            chart: {
+                width: 380,
+                type: 'pie',
+            },
+            labels: ['Team A', 'Team B', 'Team C', 'Team D', 'Team E'],
+            responsive: [{
+                breakpoint: 480,
+                options: {
+                    chart: {
+                        width: 200
+                    },
+                    legend: {
+                        position: 'bottom'
+                    }
                 }
-            }
-        }]
-    };
+            }]
+        };
 
-    // Initialize and render the chart
-    var chart = new ApexCharts(document.querySelector("#chart"), options);
-    chart.render();
-</script>
+        // Initialize and render the chart
+        var chart = new ApexCharts(document.querySelector("#chart"), options);
+        chart.render();
+    </script>
     <div class="row">
         <div class="col-sm-4">
             <div class="card mini-stats-wid">
@@ -45,7 +45,7 @@
                         <div class="media-body">
                             <p class="text-muted mb-2">Registrations</p>
                             <h5 class="mb-0">
-                                {{registrations}}
+                                {{ members }}
                             </h5>
                         </div>
                     </div>
@@ -80,7 +80,7 @@
                         <div class="media-body">
                             <p class="text-muted mb-2">Subscriptions</p>
                             <h5 class="mb-0">
-                                {{subscriptions}} <span
+                                {{ subscriptions }} <span
                                     class="font-size-14 text-muted"></span>
                             </h5>
                         </div>
@@ -99,7 +99,6 @@
                 </div>
             </div>
         </div>
-
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
@@ -113,7 +112,7 @@
 
 
     <hr>
-    <div class="row justify-content-center"> 
+    <div class="row justify-content-center">
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
@@ -147,7 +146,7 @@
                 name: 'Users',
                 data: {{user_list}}
             }, {
-                name: 'Members',
+                name: 'Membership',
                 data: {{membership_list}}
             }, {
                 name: 'Fee',

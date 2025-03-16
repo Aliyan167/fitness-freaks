@@ -2,105 +2,113 @@
 {% load crispy_forms_tags %}
 
 {% block subtitle %}
-Members List
+    Members List
 {% endblock %}
 
 {% block content %}
-<div class="card p-3">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4 class="font-weight-bold">Members List</h4>
-        <a href="{% url 'members:member_create' %}" class="btn btn-primary">
-            <i class="fa fa-plus"></i> Add Member
-        </a>
-    </div>
-
-    <!-- Filters Section -->
-    <form method="get" class="row mb-3">
-        <div class="col-md-4">
-            <input type="text" name="search" class="form-control" placeholder="Search by name, email, or phone..." value="{{ search_query }}">
+    <div class="card p-3">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="font-weight-bold">Members List</h4>
+            <a href="{% url 'members:member_create' %}" class="btn btn-primary">
+                <i class="fa fa-plus"></i> Add Member
+            </a>
         </div>
-        <div class="col-md-2">
-            <button type="submit" class="btn btn-secondary w-100">
-                <i class="fa fa-search"></i> Search
-            </button>
-        </div>
-    </form>
 
-    <!-- Members Table -->
-    <div class="table-responsive">
-        <table class="table table-striped">
-            {% if members %}
-            <thead class="border-bottom">
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>Role</th>
-                    <th>Joined At</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for member in members %}
+        <!-- Filters Section -->
+        <form method="get" class="row mb-3">
+            <div class="col-md-4">
+                <input type="text" name="search" class="form-control" placeholder="Search by name, email, or phone..."
+                       value="{{ search_query }}">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-secondary w-100">
+                    <i class="fa fa-search"></i> Search
+                </button>
+            </div>
+        </form>
+
+        <!-- Members Table -->
+        <div class="table-responsive">
+            <table class="table table-striped">
+                {% if members %}
+                    <thead class="border-bottom">
                     <tr>
-                        <td>{{ member.pk }}</td>
-                        <td>{{ member.full_name }}</td>
-                        <td>{{ member.email }}</td>
-                        <td>{{ member.phone_number }}</td>
-                        <td>
-                            {% if member.role == 'trainer' %}
-                                <b class="text-primary"><i class="fa fa-user"></i> Trainer</b>
-                            {% else %}
-                                <b class="text-success"><i class="fa fa-user"></i> Member</b>
-                            {% endif %}
-                        </td>
-                        <td>{{ member.joined_at|date:"Y-m-d" }}</td>
-                        <td>
-                            <a href="{% url 'members:member_update' pk=member.id %}" class="btn btn-sm btn-outline-primary">
-                                 <i class="fa fa-edit"></i>
-                            </a>
-                            <a href="{% url 'members:member_delete' pk=member.id %}" class="btn btn-sm btn-outline-danger">
-                                <i class="fa fa-trash"></i>
-                            </a>
-                        </td>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>CNIC</th>
+                        <th>Phone</th>
+                        <th>Role</th>
+                        <th>Joined At</th>
+                        <th>Actions</th>
                     </tr>
-                {% endfor %}
-            </tbody>
-            {% else %}
-                <tr>
-                    <td colspan="7" class="text-center text-danger">No members found.</td>
-                </tr>
-            {% endif %}
-        </table>
+                    </thead>
+                    <tbody>
+                    {% for member in members %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ member.full_name }}</td>
+                            <td>{{ member.email }}</td>
+                            <td>{{ member.cnic_number }}</td>
+                            <td>{{ member.phone_number }}</td>
+                            <td>
+                                {% if member.role == 'trainer' %}
+                                    <b class="text-primary"><i class="fa fa-user"></i> Trainer</b>
+                                {% else %}
+                                    <b class="text-success"><i class="fa fa-user"></i> Member</b>
+                                {% endif %}
+                            </td>
+                            <td>{{ member.joined_at|date:"Y-m-d" }}</td>
+                            <td>
+                                <a href="{% url 'members:member_update' pk=member.id %}"
+                                   class="btn btn-sm btn-outline-primary">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                                <a href="{% url 'members:member_delete' pk=member.id %}"
+                                   class="btn btn-sm btn-outline-danger">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                {% else %}
+                    <tr>
+                        <td colspan="7" class="text-center text-danger">No members found.</td>
+                    </tr>
+                {% endif %}
+            </table>
+        </div>
     </div>
-</div>
 
-<!-- Pagination Section -->
-{% if is_paginated %}
-    <nav>
-        <ul class="pagination justify-content-center">
-            {% if members.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?page=1&search={{ search_query|urlencode }}">« First</a>
+    <!-- Pagination Section -->
+    {% if is_paginated %}
+        <nav>
+            <ul class="pagination justify-content-center">
+                {% if members.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1&search={{ search_query|urlencode }}">« First</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link"
+                           href="?page={{ members.previous_page_number }}&search={{ search_query|urlencode }}">Previous</a>
+                    </li>
+                {% endif %}
+                <li class="page-item disabled">
+                    <span class="page-link">Page {{ members.number }} of {{ members.paginator.num_pages }}</span>
                 </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ members.previous_page_number }}&search={{ search_query|urlencode }}">Previous</a>
-                </li>
-            {% endif %}
-            <li class="page-item disabled">
-                <span class="page-link">Page {{ members.number }} of {{ members.paginator.num_pages }}</span>
-            </li>
-            {% if members.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ members.next_page_number }}&search={{ search_query|urlencode }}">Next</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ members.paginator.num_pages }}&search={{ search_query|urlencode }}">Last »</a>
-                </li>
-            {% endif %}
-        </ul>
-    </nav>
-{% endif %}
+                {% if members.has_next %}
+                    <li class="page-item">
+                        <a class="page-link"
+                           href="?page={{ members.next_page_number }}&search={{ search_query|urlencode }}">Next</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link"
+                           href="?page={{ members.paginator.num_pages }}&search={{ search_query|urlencode }}">Last »</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
 
 {% endblock %}

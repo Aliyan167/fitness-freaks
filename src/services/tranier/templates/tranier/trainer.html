@@ -28,7 +28,7 @@
                 {% if object_list %}
                     <thead>
                     <tr>
-                        <th>member</th>
+                         <th>ID</th>
                         <th>Trainer</th>
                         <th>Specialization</th>
                         <th>Experience</th>
@@ -39,8 +39,7 @@
                     <tbody>
                     {% for trainer in object_list %}
                         <tr>
-                            <td>{{ trainer.pk }}</td>
-                            <td>{{ trainer.member.membername }}</td>
+                            <td>{{ forloop.counter }}</td>
                             <td>{{ trainer.name }}</td>
                             <td>{{ trainer.specialization }}</td>
                             <td>{{ trainer.experience }} years</td>

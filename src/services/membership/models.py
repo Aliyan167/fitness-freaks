@@ -5,7 +5,6 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.conf import settings
 from model_utils.models import now
-
 from src.services.members.models import Member
 
 
@@ -36,8 +35,11 @@ class Membership(models.Model):
         self.save()
 
     def has_expired(self):
-        """Check if membership has expired."""
-        return now().date() > self.end_date
+        """Check if membership has expired and update is_active."""
+        if self.end_date < timezone.now().date():
+            self.is_active = False  # Mark as inactive
+            self.save()
+        return not self.is_active
 
 
 

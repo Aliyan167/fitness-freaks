@@ -10,6 +10,7 @@ from django.db.models import Count
 from django.db.models.functions import TruncDay
 from django.db.models import Count
 from datetime import datetime, timedelta
+from src.services.members.models import Member
 
 User = get_user_model()
 

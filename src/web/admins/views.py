@@ -1,3 +1,4 @@
+from datetime import timezone
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.forms import AdminPasswordChangeForm
@@ -9,8 +10,7 @@ from django.views import View
 from django.views.generic import (
     TemplateView, ListView, DetailView, UpdateView
 )
-from django.db.models import Sum    
-
+from django.db.models import Sum
 # from faker_data import initialization
 from src.services.users.models import User
 from src.web.accounts.decorators import staff_required_decorator
@@ -18,6 +18,8 @@ from src.web.admins.filters import UserFilter
 from src.services.fee.models import Fee
 from src.services.membership.models import Membership
 from .utils import get_users_per_month, get_memberships_per_month, get_paid_fees_per_month ,get_users_per_day
+from src.services.membership.models import Membership
+from src.services.members.models import Member
 
 
 @method_decorator(staff_required_decorator, name='dispatch')
@@ -31,14 +33,28 @@ class DashboardView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(DashboardView, self).get_context_data(**kwargs)
-        context['registrations'] = User.objects.filter(is_active=True).count()  
+        context['registrations'] = User.objects.filter(is_active=True).count()
         context['paid'] = Fee.objects.filter(status='Paid').aggregate(Sum('amount'))['amount__sum']
         context['subscriptions'] = Membership.objects.filter(is_active=True).count()
         context['user_list'] = get_users_per_month()  # initialization(init=False, mid=False, end=False)
         context['membership_list'] = get_memberships_per_month()  # initialization(init=False, mid=False, end=False)
         context['fee_list'] = get_paid_fees_per_month()
         context['list'] = get_users_per_day()
-        
+        context['members'] = User.objects.filter(is_active=True).count()
+
+
+        def get_context_data(self, **kwargs):
+            """
+            Add unpaid (expired) memberships to the dashboard context.
+            """
+            context = super().get_context_data(**kwargs)
+
+            # Fetch expired memberships where end_date has passed
+            expired_memberships = Membership.objects.filter(end_date__lt=timezone.now().date())
+
+            context['unpaid_members'] = expired_memberships  # Pass to template
+            return context
+
 
 
 

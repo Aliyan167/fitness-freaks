@@ -1,30 +1,18 @@
-from django.views.generic import TemplateView
-from .models import Trainer
-from django.views.generic import  CreateView, UpdateView, DeleteView
-from .forms import TrainerForm
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
+from .models import Trainer
+from .forms import TrainerForm
 
-class TrainerListView(TemplateView):
-    template_name = 'tranier/trainer.html'
+class TrainerListView(ListView):  # ✅ Use ListView instead of TemplateView
+    model = Trainer
+    template_name = "tranier/trainer.html"
+    context_object_name = "object_list"  # ✅ Now matches the template
 
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        # Get the search query from the GET request
-        search_query = self.request.GET.get('search', '')
-
-        # Filter trainers based on the search query
+    def get_queryset(self):
+        search_query = self.request.GET.get("search", "")
         if search_query:
-            trainers = Trainer.objects.filter(member__membername__icontains=search_query)
-        else:
-            trainers = Trainer.objects.all()
-
-        context['trainers'] = trainers
-        context['search_query'] = search_query
-        return context
-
-
+            return Trainer.objects.filter(member__membername__icontains=search_query)
+        return Trainer.objects.all()
 
 class TrainerCreateView(CreateView):
     model = Trainer

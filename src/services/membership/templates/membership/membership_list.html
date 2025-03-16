@@ -41,7 +41,7 @@
                     <tbody>
                         {% for membership in object_list %}
                             <tr>
-                                <td>{{ membership.pk }}</td>
+                                <td>{{ forloop.counter }}</td>
                                 <td>{{ membership.member }}</td>
                                 <td>{{ membership.get_membership_type_display }}</td>
                                 <td>{{ membership.start_date }}</td>

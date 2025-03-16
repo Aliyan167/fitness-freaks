@@ -1,5 +1,4 @@
 from django.utils import timezone
-
 from django.db.models import Q
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
@@ -32,7 +31,10 @@ class MembershipListView(ListView):
         Add pagination details to the context.
         """
         context = super().get_context_data(**kwargs)
-        context['search_query'] = self.request.GET.get('search', '')  # Add search query to context for form
+        context['search_query'] = self.request.GET.get('search', '')
+        # Get expired memberships (unpaid members)
+        expired_memberships = Membership.objects.filter(end_date__lt=timezone.now().date(), is_active=False)
+        context['unpaid_members'] = expired_memberships
         return context
 
 
