@@ -33,6 +33,11 @@ class FeeListView(ListView):
         if due_date_filter:
             queryset = queryset.filter(due_date__date=due_date_filter)
 
+        # Update the status for each fee record before returning the queryset
+        for fee in queryset:
+            fee.update_status_based_on_date()
+            fee.save()  # Save the updated status to the database
+
         return queryset.order_by('created_at')  # Orders oldest first, change to '-created_at' for newest first
 
 

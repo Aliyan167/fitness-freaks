@@ -11,6 +11,11 @@ from django.db.models.functions import TruncDay
 from django.db.models import Count
 from datetime import datetime, timedelta
 from src.services.members.models import Member
+from django.db.models import Sum
+from src.services.fee.models import Fee
+from src.services.members.models import Member
+from src.services.fee.models import Fee
+
 
 User = get_user_model()
 
@@ -78,3 +83,26 @@ def get_users_per_day():
         data[day_num] = entry['count']
 
     return list(data.values())
+
+def get_fee_status_summary():
+    """
+    Returns a dictionary with total paid and unpaid fee amounts for the pie chart.
+    """
+    # Get total paid amount
+    paid_amount = Fee.objects.filter(status='Paid').aggregate(
+        total_paid=Sum('amount')
+    )['total_paid'] or 0
+
+    # Get total unpaid amount (fees that are not marked as paid)
+    unpaid_amount = Fee.objects.exclude(status='Paid').aggregate(
+        total_unpaid=Sum('amount')
+    )['total_unpaid'] or 0
+
+    # Get total members (optional, if you still need this for other purposes)
+    total_members = Member.objects.filter(is_active=True).count()
+
+    return {
+        'paid': float(paid_amount),
+        'unpaid': float(unpaid_amount),
+        'total_members': total_members
+    }

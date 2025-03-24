@@ -3,78 +3,101 @@
 {% load core_tags %}
 
 {% block content %}
-<div class="row mb-5">
-    <div class="col-12 text-center">
-        <h1 class="display-4 text-primary font-weight-bold">Fee Details</h1>
-        <p class="lead text-muted">View detailed information for this fee subscription.</p>
-    </div>
-</div>
-<div class="row mt-4 justify-content-end">
-   
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-borderless">
-                        <thead class="border-bottom">
-                            <tr>
-                                <th>User</th>
-                                <th>ID</th>
-                                <th>Amount</th>
-                                <th>Discount</th>
-                                <th>Tax Rate</th>
-                                <th>Total </th>
-                                <th>Payment Date</th>
-                                <th>Status</th>
-                                <th>Payment Method</th>
-                                
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>{{ fee.member }}</td>
-                                <td>{{ fee.pk }}</td>
-                                <td>{{ fee.amount|floatformat:2 }}</td>
-                                <td>RS.  {{ fee.discount|floatformat:2 }} </td>
-                                <td>{{ fee.tax_rate|floatformat:2 }}%</td>
-                                <td>{{ fee.total_amount_due|floatformat:2 }}</td>
+    <style>
+        /* General styling for the status span to match the badge style in the image */
+        span[class^="status-"] {
+            padding: 3px 8px; /* Reduced padding to match the compact size in the image */
+            border-radius: 15px; /* Rounded corners like in the image */
+            color: white; /* White text for contrast */
+            font-weight: 400; /* Matches the font weight in the image */
+            font-size: 0.85rem; /* Slightly smaller text to match the image */
+            display: inline-block;
+            text-align: center;
+            min-width: 60px; /* Reduced min-width to match the compact size in the image */
+            line-height: 1; /* Adjust line height for better vertical centering */
+        }
 
-                                <td>
-                                    {% if fee.payment_date %}
-                                        {{ fee.payment_date }}
-                                    {% else %}
-                                        Not Paid
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if fee.is_paid %}
-                                        <b class="text-success"><i class="fa fa-check-circle"></i> Paid</b>
-                                    {% else %}
-                                        {% if fee.is_overdue %}
-                                            <b class="text-danger"><i class="fa fa-times-circle"></i> Overdue</b>
+        /* Specific background colors for each status */
+        .status-pending {
+            background-color: #6c757d; /* Gray for Pending (Bootstrap secondary) */
+        }
+
+        .status-overdue {
+            background-color: #dc3545; /* Red for Overdue (Bootstrap danger) */
+        }
+
+        .status-paid {
+            background-color: #28a745; /* Green for Paid (matches the "Active" badge) */
+        }
+
+        .status-warning {
+            background-color: #ffc107; /* Yellow for Warning (Bootstrap warning) */
+            color: #333; /* Darker text for better contrast on yellow */
+        }
+
+        .status-red {
+            background-color: #c82333; /* Darker Red for Red (Bootstrap danger-dark) */
+        }
+    </style>
+
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h1 class="display-4 text-primary font-weight-bold">Fee Details</h1>
+            <p class="lead text-muted">View detailed information for this fee subscription.</p>
+        </div>
+    </div>
+    <div class="row mt-4 justify-content-end">
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-borderless">
+                            <thead class="border-bottom">
+                                <tr>
+                                    <th>User</th>
+                                    <th>ID</th>
+                                    <th>Amount</th>
+                                    <th>Discount</th>
+                                    <th>Tax Rate</th>
+                                    <th>Total</th>
+                                    <th>Payment Date</th>
+                                    <th>Status</th>
+                                    <th>Payment Method</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{ fee.member }}</td>
+                                    <td>{{ fee.pk }}</td>
+                                    <td>{{ fee.amount|floatformat:2 }}</td>
+                                    <td>RS. {{ fee.discount|floatformat:2 }}</td>
+                                    <td>{{ fee.tax_rate|floatformat:2 }}%</td>
+                                    <td>{{ fee.total_amount_due|floatformat:2 }}</td>
+                                    <td>
+                                        {% if fee.payment_date %}
+                                            {{ fee.payment_date }}
                                         {% else %}
-                                            <b class="text-warning"><i class="fa fa-clock"></i> Pending</b>
+                                            Not Paid
                                         {% endif %}
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if fee.payment_method %}
-                                        {{ fee.payment_method }}
-                                    {% else %}
-                                        N/A
-                                    {% endif %}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                                    </td>
+                                    <td>
+                                        <span class="status-{{ fee.status|lower }}">{{ fee.get_status_display }}</span>
+                                    </td>
+                                    <td>
+                                        {% if fee.payment_method %}
+                                            {{ fee.payment_method }}
+                                        {% else %}
+                                            N/A
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
-
-
 {% endblock %}

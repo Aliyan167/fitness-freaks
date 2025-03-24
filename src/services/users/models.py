@@ -16,6 +16,7 @@ class User(AbstractUser):
     )
     phone_number = PhoneNumberField(null=True, blank=True)
 
+
     REQUIRED_FIELDS = ["username"]
     USERNAME_FIELD = "email"
 

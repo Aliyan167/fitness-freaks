@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.utils.timezone import now
 from django.core.exceptions import ValidationError
-
+from datetime import timedelta
 from src.services.members.models import Member
 
 
@@ -11,6 +11,8 @@ class Fee(models.Model):
         ('Pending', 'Pending'),
         ('Overdue', 'Overdue'),
         ('Paid', 'Paid'),
+        ('Warning', 'Warning'),
+        ('Red', 'Red'),
     ]
 
     PAYMENT_METHOD_CHOICES = [
@@ -25,7 +27,7 @@ class Fee(models.Model):
         on_delete=models.CASCADE,
         related_name='fees',
     )
-    order = models.PositiveIntegerField(null=True, blank=True)
+    order = models.PositiveIntegerField(null=False, default=1)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     discount = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)
     tax_rate = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)
@@ -41,7 +43,7 @@ class Fee(models.Model):
         choices=STATUS_CHOICES,
         default='Pending',
     )
-    is_paid = models.BooleanField(default=False)
+    is_paid = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -49,12 +51,12 @@ class Fee(models.Model):
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
 
     class Meta:
-        ordering = ['-created_at']  # Removed '-due_date'
+        ordering = ['-created_at']
         verbose_name = 'Fee'
         verbose_name_plural = 'Fees'
 
     def __str__(self):
-        return f"Fee for {self.member.user.username} - Status: {self.status}"
+        return f"Fee for {self.member.full_name} - Status: {self.status}"
 
     @property
     def total_amount_due(self):
@@ -73,6 +75,30 @@ class Fee(models.Model):
         if self.status == 'Paid' and not self.payment_date:
             self.payment_date = now().date()
 
+    def update_status_based_on_date(self):
+        """
+        Update the fee status based on the current date.
+        """
+        current_date = now().date()
+        # Use payment_date if available, otherwise fall back to issue_date
+        fee_date = self.payment_date if self.payment_date else self.issue_date
+
+        # Calculate one month after the fee date
+        one_month_later = fee_date + timedelta(days=30)  # Approximation for one month
+
+        # Check if one month has passed
+        if current_date >= one_month_later:
+            # Calculate the number of days since the one-month mark
+            days_since_overdue = (current_date - one_month_later).days
+
+            # Status transitions based on days since overdue
+            if days_since_overdue <= 5:
+                self.status = 'Overdue'
+            elif 5 < days_since_overdue <= 10:
+                self.status = 'Warning'
+            else:  # More than 10 days since overdue
+                self.status = 'Red'
+
     def save(self, *args, **kwargs):
         """
         Override save method to auto-update statuses and calculate the total amount.
@@ -84,6 +110,9 @@ class Fee(models.Model):
         # Calculate total amount if not already provided
         if not self.total_amount:
             self.total_amount = self.total_amount_due
+
+        # Update status based on the date
+        self.update_status_based_on_date()
 
         super().save(*args, **kwargs)
 

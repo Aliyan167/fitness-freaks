@@ -3,6 +3,43 @@
 {% load core_tags %}
 
 {% block content %}
+    <style>
+        /* General styling for the status span to match the badge style in the image */
+        span[class^="status-"] {
+            padding: 3px 8px; /* Reduced padding to match the compact size in the image */
+            border-radius: 15px; /* Rounded corners like in the image */
+            color: white; /* White text for contrast */
+            font-weight: 400; /* Matches the font weight in the image */
+            font-size: 0.85rem; /* Slightly smaller text to match the image */
+            display: inline-block;
+            text-align: center;
+            min-width: 60px; /* Reduced min-width to match the compact size in the image */
+            line-height: 1; /* Adjust line height for better vertical centering */
+        }
+
+        /* Specific background colors for each status */
+        .status-pending {
+            background-color: #6c757d; /* Gray for Pending (Bootstrap secondary) */
+        }
+
+        .status-overdue {
+            background-color: #dc3545; /* Red for Overdue (Bootstrap danger) */
+        }
+
+        .status-paid {
+            background-color: #28a745; /* Green for Paid (matches the "Active" badge) */
+        }
+
+        .status-warning {
+            background-color: #ffc107; /* Yellow for Warning (Bootstrap warning) */
+            color: #333; /* Darker text for better contrast on yellow */
+        }
+
+        .status-red {
+            background-color: #c82333; /* Darker Red for Red (Bootstrap danger-dark) */
+        }
+    </style>
+
     <div class="card p-3">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h4 class="font-weight-bold">Fee Records</h4>
@@ -10,7 +47,7 @@
                 <i class="fa fa-plus"></i> Add New Fee
             </a>
         </div>
-        
+
         <!-- Filters Section -->
         <form method="get" class="row mb-3">
             <div class="col-md-4">
@@ -22,6 +59,8 @@
                     <option value="Paid" {% if status_filter == "Paid" %}selected{% endif %}>Paid</option>
                     <option value="Pending" {% if status_filter == "Pending" %}selected{% endif %}>Pending</option>
                     <option value="Overdue" {% if status_filter == "Overdue" %}selected{% endif %}>Overdue</option>
+                    <option value="Warning" {% if status_filter == "Warning" %}selected{% endif %}>Warning</option>
+                    <option value="Red" {% if status_filter == "Red" %}selected{% endif %}>Red</option>
                 </select>
             </div>
 
@@ -57,13 +96,7 @@
                                 <td>{{ fee.amount|floatformat:2 }}</td>
                                 <td>{{ fee.payment_date }}</td>
                                 <td>
-                                    {% if fee.is_paid %}
-                                        <span class="badge badge-success">Paid</span>
-                                    {% elif fee.is_overdue %}
-                                        <span class="badge badge-danger">Overdue</span>
-                                    {% else %}
-                                        <span class="badge badge-warning">Pending</span>
-                                    {% endif %}
+                                    <span class="status-{{ fee.status|lower }}">{{ fee.get_status_display }}</span>
                                 </td>
                                 <td>
                                     <a href="{% url 'fee:fee_update' fee.pk %}" class="btn btn-sm btn-outline-primary">
