@@ -34,7 +34,7 @@
                         <div class="media-body">
                             <p class="text-muted mb-2">Fee Paid</p>
                             <h5 class="mb-0">
-                                ${{ paid|floatformat:2|intcomma }} <span class="font-size-14 text-muted"></span>
+                                {{ paid|floatformat:2|intcomma }} <span class="font-size-14 text-muted"></span>
                             </h5>
                         </div>
                     </div>
@@ -255,7 +255,7 @@
             dataLabels: {
                 enabled: true,
                 formatter: function (val, opts) {
-                    return "$" + opts.w.globals.series[opts.seriesIndex].toLocaleString('en-US', {
+                    return "" + opts.w.globals.series[opts.seriesIndex].toLocaleString('en-US', {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2
                     });
@@ -264,7 +264,7 @@
             tooltip: {
                 y: {
                     formatter: function(value) {
-                        return '$' + value.toLocaleString('en-US', {
+                        return '' + value.toLocaleString('en-US', {
                             minimumFractionDigits: 2,
                             maximumFractionDigits: 2
                         });
@@ -274,7 +274,7 @@
             legend: {
                 position: 'bottom',
                 formatter: function(seriesName, opts) {
-                    return seriesName + ": $" + opts.w.globals.series[opts.seriesIndex].toLocaleString('en-US', {
+                    return seriesName + ": " + opts.w.globals.series[opts.seriesIndex].toLocaleString('en-US', {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2
                     });
