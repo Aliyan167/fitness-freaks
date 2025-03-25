@@ -2,6 +2,7 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% load humanize %}
+{% load core_tags %}
 
 {% block subtitle %} {{ request.user }} {% endblock %}
 
@@ -96,6 +97,140 @@
             </div>
         </div>
     </div>
+
+    <hr>
+    <div class="row">
+        <!-- Paid Fees Section -->
+        <div class="col-md-4">
+            <div class="card p-3 mb-4">
+                <h4 class="card-title mb-3 text-success">Recently Paid Fees</h4>
+                <p class="text-muted">Members who have paid their fees.</p>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        {% if paid_fees %}
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Member</th>
+                                <th>Amount</th>
+                                <th>Payment Date</th>
+                                <th>Status</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for fee in paid_fees %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ fee.member.full_name }}</td>
+                                    <td>{{ fee.amount|floatformat:2 }}</td>
+                                    <td>{{ fee.payment_date }}</td>
+                                    <td>
+                                        <span class="status-{{ fee.status|lower }}">{{ fee.get_status_display }}</span>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center text-muted">No paid fees found.</td>
+                            </tr>
+                        {% endif %}
+                    </table>
+                </div>
+                <div class="text-right mt-1">
+                    <a href="{% url 'fee:fee_list' %}" class="btn btn-sm btn-primary rounded-pill">Read More</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Warning Fees Section -->
+        <div class="col-md-4">
+            <div class="card p-3 mb-4">
+                <h4 class="card-title mb-3 text-warning">Fees in Warning Status</h4>
+                <p class="text-muted">Members who are in the warning period (6-10 days overdue).</p>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        {% if warning_fees %}
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Member</th>
+                                <th>Amount</th>
+                                <th>Due Date</th>
+                                <th>Status</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for fee in warning_fees %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ fee.member.full_name }}</td>
+                                    <td>{{ fee.amount|floatformat:2 }}</td>
+                                    <td>{{ fee.payment_date|default:fee.issue_date }}</td>
+                                    <td>
+                                        <span class="status-{{ fee.status|lower }}">{{ fee.get_status_display }}</span>
+
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center text-muted">No fees in warning status.</td>
+                            </tr>
+                        {% endif %}
+                    </table>
+                </div>
+                <div class="text-right mt-1">
+                    <a href="{% url 'fee:fee_list' %}" class="btn btn-sm btn-primary rounded-pill">Read More</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Critically Overdue Fees Section -->
+        <div class="col-md-4">
+            <div class="card p-3 mb-4">
+                <h4 class="card-title mb-3 text-danger">Critically Overdue Fees</h4>
+                <p class="text-muted">Members whose fees are overdue by more than 10 days.</p>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        {% if red_fees %}
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Member</th>
+                                <th>Amount</th>
+                                <th>Due Date</th>
+                                <th>Status</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for fee in red_fees %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ fee.member.full_name }}</td>
+                                    <td>{{ fee.amount|floatformat:2 }}</td>
+                                    <td>{{ fee.payment_date|default:fee.issue_date }}</td>
+                                    <td>
+                                        <span class="status-{{ fee.status|lower }}">{{ fee.get_status_display }}</span>
+
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center text-muted">No critically overdue fees found.</td>
+                            </tr>
+                        {% endif %}
+                    </table>
+                </div>
+                <div class="text-right mt-1">
+                    <a href="{% url 'fee:fee_list' %}" class="btn btn-sm btn-primary rounded-pill">Read More</a>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block css %}
@@ -103,6 +238,45 @@
         .chart-container {
             width: 100%;
             height: 250px; /* Set a consistent height for both charts */
+        }
+
+        /* General styling for the status span to match the badge style */
+        span[class^="status-"] {
+            padding: 3px 8px;
+            border-radius: 15px;
+            color: white;
+            font-weight: 400;
+            font-size: 0.85rem;
+            display: inline-block;
+            text-align: center;
+            min-width: 60px;
+            line-height: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        span[class^="status-"]:hover {
+            opacity: 0.8;
+        }
+
+        .status-pending {
+            background-color: #6c757d;
+        }
+
+        .status-overdue {
+            background-color: #dc3545;
+        }
+
+        .status-paid {
+            background-color: #28a745;
+        }
+
+        .status-warning {
+            background-color: #ffc107;
+            color: #333;
+        }
+
+        .status-red {
+            background-color: #c82333;
         }
     </style>
 {% endblock %}
@@ -263,7 +437,7 @@
             },
             tooltip: {
                 y: {
-                    formatter: function(value) {
+                    formatter: function (value) {
                         return '' + value.toLocaleString('en-US', {
                             minimumFractionDigits: 2,
                             maximumFractionDigits: 2
@@ -273,7 +447,7 @@
             },
             legend: {
                 position: 'bottom',
-                formatter: function(seriesName, opts) {
+                formatter: function (seriesName, opts) {
                     return seriesName + ": " + opts.w.globals.series[opts.seriesIndex].toLocaleString('en-US', {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2
@@ -304,5 +478,10 @@
         chart_year_months_registrations.render();
         chart_month_days_registrations.render();
         chart_pie.render();
+
+        // Enable Bootstrap tooltips
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
     </script>
 {% endblock %}

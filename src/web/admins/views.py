@@ -16,44 +16,51 @@ from src.services.users.models import User
 from src.web.accounts.decorators import staff_required_decorator
 from src.web.admins.filters import UserFilter
 from src.services.fee.models import Fee
+
 from src.services.membership.models import Membership
 from .utils import get_users_per_month, get_memberships_per_month, get_paid_fees_per_month, get_users_per_day, \
     get_fee_status_summary
 from src.services.membership.models import Membership
 from src.services.members.models import Member
+from django.utils.timezone import now
 
 
 @method_decorator(staff_required_decorator, name='dispatch')
 class DashboardView(TemplateView):
-    """
-    Registrations: Today, Month, Year (PAID/UNPAID)
-    Subscriptions: Today, Month, Year (TYPES)
-    Withdrawals  : Today, Month, Year (CALCULATE)
-    """
     template_name = 'admins/dashboard.html'
 
     def get_context_data(self, **kwargs):
         context = super(DashboardView, self).get_context_data(**kwargs)
+
+        # Existing context data
         context['registrations'] = User.objects.filter(is_active=True).count()
         context['paid'] = Fee.objects.filter(status='Paid').aggregate(Sum('amount'))['amount__sum']
         context['subscriptions'] = Membership.objects.filter(is_active=True).count()
-        context['user_list'] = get_users_per_month()  # initialization(init=False, mid=False, end=False)
-        context['membership_list'] = get_memberships_per_month()  # initialization(init=False, mid=False, end=False)
+        context['user_list'] = get_users_per_month()
+        context['membership_list'] = get_memberships_per_month()
         context['fee_list'] = get_paid_fees_per_month()
         context['list'] = get_users_per_day()
-        context['members'] = User.objects.filter(is_active=True).count()
-      #  context['unpaid_members'] = Membership.objects.filter(end_date__lt=timezone.now().date())
         fee_summary = get_fee_status_summary()
         context['paid'] = fee_summary['paid']
         context['members'] = fee_summary['total_members']
         context['unpaid'] = fee_summary['unpaid']
+
+        # New context data for the lists
+        all_fees = Fee.objects.all()
+        for fee in all_fees:
+            fee.update_status_based_on_date()
+            fee.save()
+
+        paid_fees = Fee.objects.filter(status='Paid').order_by('-created_at')[:5]
+        warning_fees = Fee.objects.filter(status='Warning').order_by('-created_at')[:5]
+        red_fees = Fee.objects.filter(status='Red').order_by('-created_at')[:5]
+        context['red_fees'] = red_fees
+        context['paid_fees'] = paid_fees
+        context['warning_fees'] = warning_fees
+
+        context['current_date'] = now().date()
+
         return context
-
-
-
-
-
-
 
 
 """ USERS """

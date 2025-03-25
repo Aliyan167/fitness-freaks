@@ -4,6 +4,7 @@ from django.db.models import Q
 from .models import Fee
 from .forms import FeeForm
 
+
 class FeeListView(ListView):
     model = Fee
     template_name = 'fee-list.html'
