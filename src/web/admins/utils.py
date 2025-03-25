@@ -106,3 +106,26 @@ def get_fee_status_summary():
         'unpaid': float(unpaid_amount),
         'total_members': total_members
     }
+
+def get_members_per_month():
+    """Returns a list of member counts per month for the current year."""
+    months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    data = {month: 0 for month in months}
+
+    # Get the current year
+    current_year = datetime.now().year
+
+    # Query members for the current year, annotate with the month of created_at, and count per month
+    queryset = Member.objects.filter(created_at__year=current_year) \
+        .annotate(month=TruncMonth('created_at')) \
+        .values('month') \
+        .annotate(count=Count('id'))
+
+    # Update the data dictionary with the counts for each month
+    for entry in queryset:
+        month_name = entry['month'].strftime("%b")
+        data[month_name] = entry['count']
+
+    # Return the list of counts in the order of the months
+    return list(data.values())
+
