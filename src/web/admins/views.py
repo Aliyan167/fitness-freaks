@@ -53,8 +53,8 @@ class DashboardView(TemplateView):
 
         paid_fees = Fee.objects.filter(status='Paid').order_by('-created_at')[:5]
         warning_fees = Fee.objects.filter(status='Warning').order_by('-created_at')[:5]
-        red_fees = Fee.objects.filter(status='Red').order_by('-created_at')[:5]
-        context['red_fees'] = red_fees
+        flag_fees = Fee.objects.filter(status='flag').order_by('-created_at')[:5]
+        context['flag_fees'] = flag_fees
         context['paid_fees'] = paid_fees
         context['warning_fees'] = warning_fees
 

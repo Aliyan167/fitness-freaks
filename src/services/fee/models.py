@@ -12,7 +12,7 @@ class Fee(models.Model):
         ('Overdue', 'Overdue'),
         ('Paid', 'Paid'),
         ('Warning', 'Warning'),
-        ('Red', 'Red'),
+        ('flag', 'flag'),
     ]
 
     PAYMENT_METHOD_CHOICES = [
@@ -97,7 +97,7 @@ class Fee(models.Model):
             elif 5 < days_since_overdue <= 10:
                 self.status = 'Warning'
             else:  # More than 10 days since overdue
-                self.status = 'Red'
+                self.status = 'flag'
 
     def save(self, *args, **kwargs):
         """

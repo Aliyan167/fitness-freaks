@@ -128,4 +128,3 @@ def get_members_per_month():
 
     # Return the list of counts in the order of the months
     return list(data.values())
-
